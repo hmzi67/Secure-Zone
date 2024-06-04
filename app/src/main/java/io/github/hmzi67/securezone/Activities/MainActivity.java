@@ -1,10 +1,12 @@
 package io.github.hmzi67.securezone.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,16 +23,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         init();
     }
 
     private void init() {
         binding.testBtn.setOnClickListener(view -> {
-            ProgressStatus ps = new ProgressStatus(this);
-            ps.setTitle("Testing");
-            ps.setCanceledOnTouchOutside(true);
-            ps.show();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//            ProgressStatus ps = new ProgressStatus(this);
+//            ps.setTitle("Testing");
+//            ps.setCanceledOnTouchOutside(true);
+//            ps.show();
         });
     }
 }

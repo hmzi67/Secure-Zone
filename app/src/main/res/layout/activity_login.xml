@@ -24,6 +24,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/ic_login_screen"
                 android:contentDescription="app logo"
                 />
 
@@ -38,11 +39,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Secure Zone" />
+                    android:text="Secure Zone"
+                    android:textSize="42sp"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="16sp"
                     android:text="Join us for secure access" />
 
             </LinearLayout>
