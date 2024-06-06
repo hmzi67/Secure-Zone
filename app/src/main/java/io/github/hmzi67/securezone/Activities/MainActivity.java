@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         binding.testBtn.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            startActivity(new Intent(MainActivity.this, IntroScreenActivity.class));
 //            ProgressStatus ps = new ProgressStatus(this);
 //            ps.setTitle("Testing");
 //            ps.setCanceledOnTouchOutside(true);
