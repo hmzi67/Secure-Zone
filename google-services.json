@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "691703449591",
+    "firebase_url": "https://zone-3821a-default-rtdb.firebaseio.com",
+    "project_id": "zone-3821a",
+    "storage_bucket": "zone-3821a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691703449591:android:1dcfdaa955b05e280950f2",
+        "android_client_info": {
+          "package_name": "io.github.hmzi67.securezone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "691703449591-ci8b8n91jmv8ehukrpjtjdjpcoravhdc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUFwfAeluGlqMJq_BdJcg1XBJpR9f79SI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "691703449591-ci8b8n91jmv8ehukrpjtjdjpcoravhdc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

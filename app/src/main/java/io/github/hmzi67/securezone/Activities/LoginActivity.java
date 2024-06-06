@@ -3,6 +3,9 @@ package io.github.hmzi67.securezone.Activities;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+
 import io.github.hmzi67.securezone.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
