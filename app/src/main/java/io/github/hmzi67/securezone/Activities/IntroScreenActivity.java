@@ -55,9 +55,9 @@ public class IntroScreenActivity extends AppCompatActivity {
 
         // fill list screen
         List<ScreenItem> mList = new ArrayList<>();
-        mList.add(new ScreenItem("Safety over speed", "", R.drawable.ic_login_screen));
-        mList.add(new ScreenItem("Stay Connected", "", R.drawable.ic_avatar_placeholder));
-        mList.add(new ScreenItem("Safe Travel", "", R.drawable.ic_avatar_placeholder));
+        mList.add(new ScreenItem("Safety over speed", "Safe walk analyzes indicates and crime reports, So we can recommend you to safest route to reach your destination.", R.drawable.ic_login_screen));
+        mList.add(new ScreenItem("Stay Connected", "Share live location with your loved ones and get immediate access to the safety toolkit. \nYou are not alone:)", R.drawable.ic_avatar_placeholder));
+        mList.add(new ScreenItem("Safe Travel", "It's not about the destination, It's about the journey", R.drawable.ic_avatar_placeholder));
 
         // setup viewpager
         screenPager = findViewById(R.id.screen_viewpager2);

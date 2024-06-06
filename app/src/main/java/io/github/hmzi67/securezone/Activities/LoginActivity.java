@@ -1,5 +1,6 @@
 package io.github.hmzi67.securezone.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,5 +21,9 @@ public class LoginActivity extends AppCompatActivity {
         init();
     }
 
-    private void init() { /* private initializer method */ }
+    private void init() {
+        binding.createAccountLink.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+        });
+    }
 }
