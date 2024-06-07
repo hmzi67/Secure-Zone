@@ -22,6 +22,12 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void init() {
+        // go back
+        binding.goBack.setOnClickListener(view -> onBackPressed());
 
+        // on signin link
+        binding.loginLink.setOnClickListener(view -> {
+            onBackPressed();
+        });
     }
 }
