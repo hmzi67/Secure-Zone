@@ -56,7 +56,7 @@ public class IntroScreenActivity extends AppCompatActivity {
                 startActivity(mainActivity);
                 finish();
             } else {
-                Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                Intent mainActivity = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(mainActivity);
                 finish();
             }
