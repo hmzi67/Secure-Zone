@@ -23,9 +23,11 @@
         android:id="@+id/navView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:background="@color/bg_field"
+        android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
         app:menu="@menu/botton_navigation_menu"
-        android:background="@color/bg_Color"
         />
 
 </RelativeLayout>

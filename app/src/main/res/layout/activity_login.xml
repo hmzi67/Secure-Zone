@@ -49,36 +49,90 @@
 
             </LinearLayout>
 
-            <android.widget.EditText
-                android:id="@+id/userEmail"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/email_toggle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:layout_marginTop="20dp"
-                android:drawableStart="@drawable/ic_email"
-                android:background="@drawable/bg_field"
-                android:drawablePadding="10dp"
+                android:gravity="center"
                 android:layout_marginHorizontal="20dp"
-                android:hint="Email Address"
-                android:inputType="textEmailAddress"
-                android:layout_gravity="center" />
+                app:hintEnabled="false"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/signin_user_password"
+                <android.widget.EditText
+                    android:id="@+id/userEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/ic_email"
+                    android:padding="10dp"
+                    android:ems="10"
+                    android:hint="Email Address"
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password_toggle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:layout_marginTop="20dp"
-                android:drawableStart="@drawable/ic_password"
-                android:background="@drawable/bg_field"
-                android:drawableTint="@color/black"
-                android:drawableEnd="@drawable/ic_password_hidden"
-                android:drawablePadding="10dp"
+                android:gravity="center"
+                app:hintEnabled="false"
                 android:layout_marginHorizontal="20dp"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:layout_gravity="center" />
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:passwordToggleEnabled="true">
+
+                <android.widget.EditText
+                    android:id="@+id/signin_user_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:drawableStart="@drawable/ic_password"
+                    android:drawableTint="@color/black"
+                    android:drawablePadding="10dp"
+                    android:ems="10"
+                    android:freezesText="true"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:padding="10dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!--            <android.widget.EditText-->
+<!--                android:id="@+id/userEmail"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="12dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:drawableStart="@drawable/ic_email"-->
+<!--                android:background="@drawable/bg_field"-->
+<!--                android:drawablePadding="10dp"-->
+<!--                android:layout_marginHorizontal="20dp"-->
+<!--                android:hint="Email Address"-->
+<!--                android:inputType="textEmailAddress"-->
+<!--                android:layout_gravity="center" />-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/signin_user_password"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="12dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:drawableStart="@drawable/ic_password"-->
+<!--                android:background="@drawable/bg_field"-->
+<!--                android:drawableTint="@color/black"-->
+<!--                android:drawableEnd="@drawable/ic_password_hidden"-->
+<!--                android:drawablePadding="10dp"-->
+<!--                android:layout_marginHorizontal="20dp"-->
+<!--                android:ems="10"-->
+<!--                android:hint="Password"-->
+<!--                android:inputType="textPassword"-->
+<!--                android:layout_gravity="center" />-->
 
 <!--            <com.google.android.material.textfield.TextInputLayout-->
 <!--                android:id="@+id/password_layout"-->

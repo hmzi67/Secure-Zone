@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private void init() {
         // create account link
         binding.createAccountLink.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
         });
 
         // ready Firebase
