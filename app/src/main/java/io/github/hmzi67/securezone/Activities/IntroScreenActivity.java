@@ -16,6 +16,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +36,30 @@ public class IntroScreenActivity extends AppCompatActivity {
     int position = 0;
     Button btnGetStarted;
 
+    private FirebaseAuth firebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro_screen);
-// when the activity is about to be launch we need to check id it's opened before or not
+        // Firebase Database realtime sync enabled.
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase.getInstance().getReference().keepSynced(true);
+        // when the activity is about to be launch we need to check id it's opened before or not
         if (restorePrefData() ) {
-            Intent mainActivity = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(mainActivity);
-            finish();
+            // ready the firebase
+            firebaseAuth = FirebaseAuth.getInstance();
+
+            if (firebaseAuth.getCurrentUser() != null) {
+                Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(mainActivity);
+                finish();
+            } else {
+                Intent mainActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(mainActivity);
+                finish();
+            }
         }
 
         // tab init

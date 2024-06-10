@@ -11,6 +11,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import io.github.hmzi67.securezone.R;
 import io.github.hmzi67.securezone.Widgets.ProgressStatus;
 import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
@@ -29,12 +31,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        binding.testBtn.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, IntroScreenActivity.class));
-//            ProgressStatus ps = new ProgressStatus(this);
-//            ps.setTitle("Testing");
-//            ps.setCanceledOnTouchOutside(true);
-//            ps.show();
-        });
+        binding.test.setOnClickListener(view -> startActivity(new Intent(this, VerificationActivity.class)));
     }
 }
