@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import io.github.hmzi67.securezone.Widgets.ProgressStatus;
 import io.github.hmzi67.securezone.databinding.ActivityLoginBinding;
+import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
