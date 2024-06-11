@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/bottom_navigation_home"
+        android:title="Home"
+        android:icon="@drawable/ic_home"/>
+
+    <item
+        android:id="@+id/bottom_navigation_fakeCall"
+        android:title="Fake Call"
+        android:icon="@drawable/ic_phone"
+        />
+
+    <item
+        android:title=""/>
+
+    <item
+        android:id="@+id/bottom_navigation_addPerson"
+        android:title="Contact Add"
+        android:icon="@drawable/ic_add_person" />
+    <item
+        android:id="@+id/bottom_navigation_google"
+        android:title="Google"
+        android:icon="@drawable/ic_google" />
+
+</menu>
