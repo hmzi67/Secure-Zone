@@ -83,6 +83,7 @@ public class IntroScreenActivity extends AppCompatActivity {
         // setup tabLayout with viewPager
         tabIndicator.setupWithViewPager(screenPager);
 
+
         //next button click Listener
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
