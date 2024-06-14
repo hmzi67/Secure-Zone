@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void init() {
-        binding.test.setOnClickListener(view -> startActivity(new Intent(this, VerificationActivity.class)));
+        // binding.test.setOnClickListener(view -> startActivity(new Intent(this, VerificationActivity.class)));
     }
 
     @Override
