@@ -5,4 +5,18 @@
 
     <string name="open_nav">Open Navigation Drawer</string>
     <string name="close_nav">Close Navigation Drawer</string>
+
+    <string name="protectionTipsString">
+        <li>Always be aware of your surroundings and
+      trust your instincts.</li>
+        <li>Keep your phone charged and easily
+      accessible.</li>
+        <li>Share your location with a trusted friend and
+     family member.</li>
+        <li>Carry a personal safety alarm or whistle.</li>
+        <li>Learn basic self defense techniques.</li>
+        <li>Avoid sharing personal information with any
+     strangers.</li>
+        <li>Stay alert using public transportation.</li>
+    </string>
 </resources>
