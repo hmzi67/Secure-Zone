@@ -39,11 +39,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Secure Zone"
+                    android:textColor="@color/black"
                     android:textSize="42sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
                     android:text="Join us for secure access"
                     android:textSize="16sp" />
 
@@ -66,6 +68,8 @@
                     android:background="@drawable/bg_field"
                     android:drawablePadding="10dp"
                     android:drawableStart="@drawable/ic_email"
+                    android:textColor="@color/black"
+                    android:textColorHint="#444444"
                     android:padding="10dp"
                     android:ems="10"
                     android:hint="Email Address"
@@ -83,6 +87,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
+                app:passwordToggleTint="#444444"
                 app:passwordToggleEnabled="true">
 
                 <android.widget.EditText
@@ -90,12 +95,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/bg_field"
+                    android:textColor="@color/black"
                     android:drawableStart="@drawable/ic_password"
                     android:drawableTint="@color/black"
                     android:drawablePadding="10dp"
                     android:ems="10"
                     android:freezesText="true"
                     android:hint="Password"
+                    android:textColorHint="#444444"
                     android:inputType="textPassword"
                     android:padding="10dp"
                     android:paddingStart="12dp"
@@ -167,6 +174,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Forget"
+                    android:textColor="@color/black"
                     android:textAlignment="center"
                     android:textSize="16sp"
                     app:layout_constraintTop_toBottomOf="@+id/password_layout" />
@@ -207,6 +215,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_margin="20dp"
+                android:textColor="@color/black"
                 android:text="or" />
 
             <LinearLayout
@@ -254,6 +263,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Don't have an account? "
+                    android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <TextView

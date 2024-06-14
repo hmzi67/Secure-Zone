@@ -45,7 +45,7 @@ import io.github.hmzi67.securezone.R;
 import io.github.hmzi67.securezone.Widgets.ProgressStatus;
 import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  {
     private ActivityMainBinding binding;
 
     @Override
@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_home);
         }
+
         replaceFragment(new HomeFragment());
 
         bottomNavigationView.setBackground(null);
@@ -90,12 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showBottomDialog();
-            }
-        });
+        fab.setOnClickListener(view -> showBottomDialog());
 
 
         init();
@@ -119,42 +115,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LinearLayout liveLayout = dialog.findViewById(R.id.layoutLive);
         ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
 
-        videoLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this,"Upload a Video is clicked",Toast.LENGTH_SHORT).show();
-
-            }
+        videoLayout.setOnClickListener(view -> {
+            dialog.dismiss();
+            Toast.makeText(MainActivity.this,"Upload a Video is clicked",Toast.LENGTH_SHORT).show();
         });
 
-        shortsLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this,"Create a short is Clicked",Toast.LENGTH_SHORT).show();
-
-            }
+        shortsLayout.setOnClickListener(view -> {
+            dialog.dismiss();
+            Toast.makeText(MainActivity.this,"Create a short is Clicked",Toast.LENGTH_SHORT).show();
         });
 
-        liveLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this,"Go live is Clicked",Toast.LENGTH_SHORT).show();
-
-            }
+        liveLayout.setOnClickListener(view -> {
+            dialog.dismiss();
+            Toast.makeText(MainActivity.this,"Go live is Clicked",Toast.LENGTH_SHORT).show();
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
+        cancelButton.setOnClickListener(view -> dialog.dismiss());
 
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -167,28 +143,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void init() {
         // binding.test.setOnClickListener(view -> startActivity(new Intent(this, VerificationActivity.class)));
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
+        binding.navView.setNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
             if (itemId == R.id.nav_home) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-
+                Toast.makeText(MainActivity.this, "Home Clicked", Toast.LENGTH_SHORT).show();
             } else if (itemId == R.id.nav_logout) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SecurityGestureFragment()).commit();
+                Toast.makeText(MainActivity.this, "Home Clicked", Toast.LENGTH_SHORT).show();
+
 
             } else if (itemId == R.id.nav_about) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddContactFragment()).commit();
+                Toast.makeText(MainActivity.this, "about Clicked", Toast.LENGTH_SHORT).show();
 
-            } else if (itemId == R.id.nav_logout) {
-                Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
 
-        }
-        binding.drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
+            }
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
     }
+
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//
+//            int itemId = item.getItemId();
+//
+//            if (itemId == R.id.nav_home) {
+//                Toast.makeText(this, "Home Clicked", Toast.LENGTH_SHORT).show();
+//                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+//
+//            } else if (itemId == R.id.nav_logout) {
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SecurityGestureFragment()).commit();
+//
+//            } else if (itemId == R.id.nav_about) {
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddContactFragment()).commit();
+//
+//            } else if (itemId == R.id.nav_logout) {
+//                Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
+//
+//        }
+//        binding.drawerLayout.closeDrawer(GravityCompat.START);
+//        return true;
+//    }
 }
 
