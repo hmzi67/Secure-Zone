@@ -22,18 +22,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:background="@color/bg_Color"
-            android:elevation="6dp">
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:textFontWeight="900"
-                android:textSize="21sp"
-                android:layout_gravity="center"
-                />
-
-        </androidx.appcompat.widget.Toolbar>
+            android:elevation="6dp" />
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -62,7 +51,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_Color">
+        >
 
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomAppBar"
@@ -94,6 +83,7 @@
             android:layout_gravity="center"
             android:foregroundGravity="center"
             android:id="@+id/fab"
+            android:layout_marginBottom="80dp"
             app:layout_anchorGravity="center"
             app:tint="@color/primary_Color" />
 
