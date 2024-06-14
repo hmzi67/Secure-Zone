@@ -49,7 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
     private String downloadURL;
 
     private ProgressStatus progressStatus;
-
+    private String userImagePath;
 
 
     @Override
@@ -114,36 +114,36 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-//    private void uploadImage() {
-//        if (filePath != null) {
-//            StorageReference ref = storageReference.child("images/" + firebaseAuth.getCurrentUser().getUid().toString());
-//
-//            ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                @Override
-//                                public void onSuccess(Uri uri) {
-//                                    downloadURL = uri.toString();
-//
-//                                    Log.d("sdf", downloadURL);
-//                                    SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
-//                                    SharedPreferences.Editor editor = pref.edit();
-//                                    editor.putString("url", uri.toString());
-//                                    editor.apply();
-//                                }
-//                            });
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e)
-//                        {
-//                            // Error, Image not uploaded
-//                            Toast.makeText(SignUpActivity.this,"Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//        }
-//    }
+    private void uploadImage() {
+        if (filePath != null) {
+            StorageReference ref = storageReference.child("images/" + firebaseAuth.getCurrentUser().getUid().toString());
+
+            ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    downloadURL = uri.toString();
+
+                                    Log.d("sdf", downloadURL);
+                                    SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = pref.edit();
+                                    editor.putString("url", uri.toString());
+                                    editor.apply();
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            // Error, Image not uploaded
+                            Toast.makeText(SignUpActivity.this,"Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
 
     private void signUp() {
         String userName = binding.username.getText().toString();
@@ -169,32 +169,30 @@ public class SignUpActivity extends AppCompatActivity {
 
                 progressStatus.show();
                 // uploadImage();
-                Intent intent = new Intent(SignUpActivity.this, VerificationActivity.class);
-                intent.putExtra("phoneNo", userPhoneNumber);
-                intent.putExtra("userName", userName);
-                intent.putExtra("userEmail", userEmail);
-                intent.putExtra("userPhoto", filePath);
-                startActivity(intent);
-                // startActivity(new Intent(this, VerificationActivity.class));
-                progressStatus.dismiss();
 
-//                firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(task -> {
-//                   if (task.isSuccessful()) {
-//                       uploadImage();
-//                       SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
-//                       Users user = new Users(userName, userEmail, userPhoneNumber, pref.getString("url", null), "", "", "", "");
-//                       firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").setValue(user).addOnCompleteListener(task1 -> {
-//                           if (task1.isSuccessful()) {
-//                               progressStatus.dismiss();
-//                               Toast.makeText(this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
-//                               startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-//                               finish();
-//                           } else {
-//                               Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
-//                           }
-//                       });
-//                   }
-//                });
+                firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(task -> {
+                   if (task.isSuccessful()) {
+                       uploadImage();
+                       SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
+                       Users user = new Users(userName, userEmail, userPhoneNumber, pref.getString("url", null), "", "", "", "");
+                       firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").setValue(user).addOnCompleteListener(task1 -> {
+                           if (task1.isSuccessful()) {
+                               progressStatus.dismiss();
+                               firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(task2 -> {
+                                   if (task2.isSuccessful()) {
+                                       Toast.makeText(this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
+                                       startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                                       finish();
+                                   } else {
+                                       Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
+                                   }
+                               });
+                           } else {
+                               Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
+                           }
+                       });
+                   }
+                });
 
             } else {
                 Toast.makeText(SignUpActivity.this, "Invalid Email! Please use valid email.", Toast.LENGTH_SHORT).show();
