@@ -15,6 +15,9 @@
         android:theme="@style/Theme.SecureZone"
         tools:targetApi="31">
         <activity
+            android:name=".Activities.AIChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.SecurityTipsActivity"
             android:exported="false" />
         <activity

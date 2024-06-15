@@ -143,7 +143,9 @@ public class MainActivity extends AppCompatActivity  {
             return true;
         });
 
-        fab.setOnClickListener(view -> showBottomDialog());
+        fab.setOnClickListener(view -> {
+            startActivity(new Intent(this, AIChatActivity.class));
+        });
 
 
         init();
