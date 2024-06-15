@@ -43,13 +43,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     private String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
-    private Uri filePath;
+    Uri filePath;
     private final int PICK_IMAGE_REQUEST = 22;
 
     String downloadURL;
 
     private ProgressStatus progressStatus;
-    private String userImagePath;
 
 
     @Override
@@ -71,20 +70,13 @@ public class SignUpActivity extends AppCompatActivity {
         binding.goBack.setOnClickListener(view -> onBackPressed());
 
         // on signin link
-        binding.loginLink.setOnClickListener(view -> {
-            onBackPressed();
-        });
+        binding.loginLink.setOnClickListener(view -> onBackPressed());
 
         // upload user profile image
-         binding.changeAvatar.setOnClickListener(view -> {
-             selectImage();
-         });
+         binding.changeAvatar.setOnClickListener(view -> selectImage());
 
          // Signup button clicked.
-        binding.signupButton.setOnClickListener(view -> {
-//            uploadImage();
-            signUp();
-        });
+        binding.signupButton.setOnClickListener(view -> signUp());
     }
 
     private void selectImage() {
@@ -111,37 +103,6 @@ public class SignUpActivity extends AppCompatActivity {
             catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    private void uploadImage() {
-        if (filePath != null) {
-            StorageReference ref = storageReference.child("images/" + firebaseAuth.getCurrentUser().getUid().toString());
-
-            ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            downloadURL = uri.toString();
-
-                            Log.d("sdf", downloadURL);
-                            SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = pref.edit();
-                            editor.putString("url", uri.toString());
-                            editor.apply();
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e)
-                {
-                    // Error, Image not uploaded
-                    Toast.makeText(SignUpActivity.this,"Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
     }
 
@@ -172,34 +133,71 @@ public class SignUpActivity extends AppCompatActivity {
 
                 firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(task -> {
                    if (task.isSuccessful()) {
-                       uploadImage();
-                       SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
-                       String profileImage = pref.getString("url", null);
-                       Users user = new Users(userName, userEmail, userPhoneNumber, downloadURL, "", "", "", "");
+                       uploadImage(userName, userEmail, userPhoneNumber);
+//                       SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
+//                       String profileImage = pref.getString("url", null);
+//                       Users user = new Users(userName, userEmail, userPhoneNumber, "", "", "", "", "");
+//                       user.setUserProfileImg(downloadURL);
 
 
-                       firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").setValue(user).addOnCompleteListener(task1 -> {
-                           if (task1.isSuccessful()) {
-                               progressStatus.dismiss();
-                               firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(task2 -> {
-                                   if (task2.isSuccessful()) {
-                                       Toast.makeText(this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
-                                       startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-                                       finish();
-                                   } else {
-                                       Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
-                                   }
-                               });
-                           } else {
-                               Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
-                           }
-                       });
+//                       firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").setValue(user).addOnCompleteListener(task1 -> {
+//                           if (task1.isSuccessful()) {
+//                               progressStatus.dismiss();
+//                               firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(task2 -> {
+//                                   if (task2.isSuccessful()) {
+//                                       Toast.makeText(this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
+//                                       startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+//                                       finish();
+//                                   } else {
+//                                       Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
+//                                   }
+//                               });
+//                           } else {
+//                               Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
+//                           }
+//                       });
                    }
                 });
 
             } else {
                 Toast.makeText(SignUpActivity.this, "Invalid Email! Please use valid email.", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private void uploadImage(String userName, String userEmail, String userPhone) {
+        if (filePath != null) {
+            StorageReference ref = storageReference.child("images/" + firebaseAuth.getCurrentUser().getUid().toString());
+
+            ref.putFile(filePath).addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                downloadURL = uri.toString();
+
+                Log.d("sdf", downloadURL);
+                Users user = new Users(userName, userEmail, userPhone, uri.toString(), "", "", "", "");
+                firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").setValue(user).addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        progressStatus.dismiss();
+                        firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(task2 -> {
+                            if (task2.isSuccessful()) {
+                                Toast.makeText(this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                                finish();
+                            } else {
+                                Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
+                    }
+                });
+//                SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
+//                SharedPreferences.Editor editor = pref.edit();
+//                editor.putString("url", uri.toString());
+//                editor.apply();
+            })).addOnFailureListener(e -> {
+                // Error, Image not uploaded
+                Toast.makeText(SignUpActivity.this,"Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
         }
     }
 

@@ -83,10 +83,6 @@ public class MainActivity extends AppCompatActivity  {
 //            navigationView.setCheckedItem(R.id.nav_home);
         }
 
-        navigationView.getHeaderView(1).findViewById(R.id.nav_home).setOnClickListener(view -> {
-            Toast.makeText(this, "Home Clicked", Toast.LENGTH_SHORT).show();
-        });
-
 //        navigationView.setNavigationItemSelectedListener(item -> {
 //            int itemId = item.getItemId();
 //
@@ -142,7 +138,8 @@ public class MainActivity extends AppCompatActivity  {
                 TextView tx1 = binding.navView.getHeaderView(0).findViewById(R.id.userEmail);
                 tx1.setText(users.getUserEmail());
                 CircleImageView cv = binding.navView.getHeaderView(0).findViewById(R.id.userImg);
-//                Picasso.get().load(users.getUserProfileImg()).placeholder(R.drawable.ic_logo).into(cv);
+                if (!users.getUserProfileImg().isEmpty())
+                    Picasso.get().load(users.getUserProfileImg()).placeholder(R.drawable.ic_logo).into(cv);
 
             }
 
