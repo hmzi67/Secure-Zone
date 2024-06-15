@@ -29,12 +29,12 @@
                 android:id="@+id/userImg"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:layout_marginVertical="20dp"
                 android:src="@drawable/ic_logo"/>
 
             <TextView
                 android:id="@+id/toolbarText"
-                android:layout_marginHorizontal="8dp"
+                android:layout_marginHorizontal="12dp"
+                android:textSize="16sp"
                 android:gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

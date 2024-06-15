@@ -82,7 +82,9 @@ public class MainActivity extends AppCompatActivity  {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Users users = snapshot.getValue(Users.class);
                     assert users != null;
-                    binding.toolbarText.setText("Hello, " + users.getUserName() + "!");
+                    String userName = users.getUserName();
+                    String[] Parts = userName.split(" ");
+                    binding.toolbarText.setText("Hello, " + Parts[0] + "!");
                     CircleImageView cv = binding.userImg.findViewById(R.id.userImg);
                     if (!users.getUserProfileImg().isEmpty())
                         Picasso.get().load(users.getUserProfileImg()).placeholder(R.drawable.ic_logo).into(cv);
