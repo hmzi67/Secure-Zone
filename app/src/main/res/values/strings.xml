@@ -33,11 +33,17 @@ and hold on until the danger has passed.
             tucking your thumb inside your fist, and closing your fingers over it.
         </li>
     </string>
-        <string name="safety_tips_alone">
+    <string name="safety_tips_alone">
             <item><b>Stick to Well-Lit and Populated Areas:</b> Avoid walking alone in deserted or poorly lit areas, especially at night.\n\n</item>
             <item><b>Plan Your Route:</b> Know where you\'re going and how you\'ll get there before you head out.\n\n</item>
             <item><b>Trust Your Gut:</b> If a situation feels unsafe, remove yourself from it. Don\'t be afraid to change course or call for a ride.\n\n</item>
             <item><b>Limit Distractions:</b> Avoid wearing headphones with loud music or being engrossed in your phone while walking alone. Stay alert to your surroundings.\n\n</item>
             <item><b>Carry Less Valuables:</b> Take only what you need and avoid carrying large sums of cash or expensive jewelry.\n\n</item>
         </string>
+    <string name="videocapturing">Video Streaming will start with your front\ncamera tured on by default if this option \nis activated.</string>
+    <string name="image_capturing">Image Capturing will start with your front\ncamera turned on by default if this option \nis activated.</string>
+    <string name="live_alert">Receive live alerts: Stay informed\n and safe with real-time location \nupdates by turning it on.</string>
+    <string name="noisy_sound">Activate noisy sound feature: Instantly \ngenerate loud alerts when needed, ensuring swift \nresponse and enhanced personal safety.</string>
+    <string name="audio_recording">"Audio recording capabilities to capture \nevidence "</string>
+    <string name="ai_assistance">"It works as a Google Assistant, It will automatically \nsend SOS on one call. "</string>
 </resources>

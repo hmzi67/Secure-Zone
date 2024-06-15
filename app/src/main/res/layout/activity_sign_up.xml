@@ -29,8 +29,8 @@
             android:layout_height="wrap_content"
             android:text="Create an account"
             android:textColor="@color/black"
-            android:textFontWeight="900"
-            android:textSize="21sp"
+            android:textStyle="bold"
+            android:textSize="22sp"
             android:layout_gravity="center"
             />
 
