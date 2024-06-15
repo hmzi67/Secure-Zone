@@ -43,6 +43,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.Objects;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.github.hmzi67.securezone.Fragments.AddContactFragment;
 import io.github.hmzi67.securezone.Fragments.FakeCallFragment;
@@ -71,6 +73,29 @@ public class MainActivity extends AppCompatActivity  {
         Toolbar toolbar = binding.homeToolbar;
         NavigationView navigationView = binding.navView;
         DrawerLayout drawerLayout = binding.drawerLayout;
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        if(firebaseAuth.getCurrentUser() != null) {
+            firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Users users = snapshot.getValue(Users.class);
+                    assert users != null;
+                    binding.toolbarText.setText("Hello, " + users.getUserName() + "!");
+                    CircleImageView cv = binding.userImg.findViewById(R.id.userImg);
+                    if (!users.getUserProfileImg().isEmpty())
+                        Picasso.get().load(users.getUserProfileImg()).placeholder(R.drawable.ic_logo).into(cv);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav);
@@ -121,6 +146,8 @@ public class MainActivity extends AppCompatActivity  {
 
         init();
     }
+
+
 
     private void init() {
         // ready the firebase
