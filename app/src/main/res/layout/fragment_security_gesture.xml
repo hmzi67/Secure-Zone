@@ -8,7 +8,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp">
         <LinearLayout
             android:layout_marginHorizontal="20dp"
             android:orientation="vertical"
@@ -47,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
-                    android:text="jdn"
+                    android:text="@string/fireSafety"
                     android:layout_marginStart="20dp"
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
@@ -70,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
-                    android:text="abc"
+                    android:text="@string/distressSignal"
                     android:layout_marginStart="20dp"
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
@@ -85,7 +86,6 @@
             </LinearLayout>
 
             <LinearLayout
-
                 android:background="@drawable/bg_card"
                 android:orientation="vertical"
                 android:padding="8dp"
@@ -101,15 +101,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
-                    android:text="abc"
+                    android:id="@+id/safetyTipsTextView"
+                    android:text="@string/safety_tips_alone"
                     android:layout_marginStart="20dp"
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
-
-
-
         </LinearLayout>
 
     </ScrollView>
