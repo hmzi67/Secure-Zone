@@ -20,53 +20,5 @@
         <li>Stay alert using public transportation.</li>
     </string>
 
-    <string name="fireSafety">
-        Drop, Cover, and Hold: \nIn the event of a fire, remember to drop to the
-ground, cover your mouth and nose with a cloth,
-and hold on until the danger has passed.
-    </string>
-    <string name="distressSignal">
-            Signal in case of kidnapping, domestic violence or in
-        any harm.\n
-        <li>
-            Raising your hand with your palm facing inward,
-            tucking your thumb inside your fist, and closing your fingers over it.
-        </li>
-    </string>
-    
-    <string name="aboutAlone">
-       <li>
-           <b>Stick to Well-Lit and Populated Areas:</b>
-      Avoid walking alone in deserted or poorly lit areas,
-      especially at night.\n
-       </li>
-        <li>
-           <b>Plan Your Route:</b>
-       Know where you're going and how you'll get there
-       before you head out.\n
-        </li>
-        <li>
-            <b>Trust Your Gut:</b>
-       If a situation feels unsafe, remove yourself from it.
-       Don't be afraid to change course or call for a ride.\n
-        </li>
-        <li>
-            <b>Limit Distractions:</b>
-      Avoid wearing headphones with loud music or
-      being engrossed in your phone while walking alone.
-      Stay alert to your surroundings.\n
-        </li>
-        <li>
-           <b>Carry Less Valuables:</b>
-     Take only what you need and avoid carrying large
-     sums of cash or expensive jewelry.\n
-        </li>
 
-
-
-
-
-
-
-    </string>
 </resources>
