@@ -16,13 +16,13 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/appLogo"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/changeAvatar"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="80dp"
                 android:layout_marginTop="80dp"
-                android:contentDescription="app logo"
-                android:src="@drawable/ic_add_person" />
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/ic_avatar_placeholder" />
 
             <android.widget.EditText
                 android:id="@+id/userName"
