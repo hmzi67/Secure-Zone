@@ -24,20 +24,28 @@
             android:background="@color/bg_Color"
             app:navigationIcon="@drawable/ic_add_person"
             android:elevation="6dp" >
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/userImg"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/ic_logo"/>
-
-            <TextView
-                android:id="@+id/toolbarText"
-                android:layout_marginHorizontal="12dp"
-                android:textSize="16sp"
-                android:gravity="center_vertical"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userImg"
+                    android:layout_width="34dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="34dp"
+                    android:src="@drawable/ic_logo"/>
+
+                <TextView
+                    android:id="@+id/toolbarText"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="12dp"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
 
 
         </androidx.appcompat.widget.Toolbar>
