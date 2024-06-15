@@ -94,8 +94,7 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:src="@drawable/ic_add_person"
+            android:src="@drawable/ic_assistant"
             app:layout_anchor="@id/bottomAppBar"
             app:maxImageSize="40dp"
             android:layout_gravity="center"
@@ -103,7 +102,7 @@
             android:id="@+id/fab"
             android:layout_marginBottom="80dp"
             app:layout_anchorGravity="center"
-            app:tint="@color/primary_Color" />
+             />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
