@@ -46,7 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 22;
 
-    private String downloadURL;
+    String downloadURL;
 
     private ProgressStatus progressStatus;
     private String userImagePath;
@@ -119,29 +119,29 @@ public class SignUpActivity extends AppCompatActivity {
             StorageReference ref = storageReference.child("images/" + firebaseAuth.getCurrentUser().getUid().toString());
 
             ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    downloadURL = uri.toString();
+                        public void onSuccess(Uri uri) {
+                            downloadURL = uri.toString();
 
-                                    Log.d("sdf", downloadURL);
-                                    SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = pref.edit();
-                                    editor.putString("url", uri.toString());
-                                    editor.apply();
-                                }
-                            });
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e)
-                        {
-                            // Error, Image not uploaded
-                            Toast.makeText(SignUpActivity.this,"Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.d("sdf", downloadURL);
+                            SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("url", uri.toString());
+                            editor.apply();
                         }
                     });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e)
+                {
+                    // Error, Image not uploaded
+                    Toast.makeText(SignUpActivity.this,"Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -174,7 +174,10 @@ public class SignUpActivity extends AppCompatActivity {
                    if (task.isSuccessful()) {
                        uploadImage();
                        SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
-                       Users user = new Users(userName, userEmail, userPhoneNumber, pref.getString("url", null), "", "", "", "");
+                       String profileImage = pref.getString("url", null);
+                       Users user = new Users(userName, userEmail, userPhoneNumber, downloadURL, "", "", "", "");
+
+
                        firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").setValue(user).addOnCompleteListener(task1 -> {
                            if (task1.isSuccessful()) {
                                progressStatus.dismiss();
@@ -198,9 +201,6 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(SignUpActivity.this, "Invalid Email! Please use valid email.", Toast.LENGTH_SHORT).show();
             }
         }
-
-
-
     }
 
     private boolean isValid(String email) {
