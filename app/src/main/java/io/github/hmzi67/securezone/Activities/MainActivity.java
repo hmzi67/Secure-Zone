@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -35,18 +36,28 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.github.hmzi67.securezone.Fragments.AddContactFragment;
 import io.github.hmzi67.securezone.Fragments.FakeCallFragment;
 import io.github.hmzi67.securezone.Fragments.HomeFragment;
 import io.github.hmzi67.securezone.Fragments.SecurityGestureFragment;
 import io.github.hmzi67.securezone.Fragments.SosFragment;
+import io.github.hmzi67.securezone.Modals.Users;
 import io.github.hmzi67.securezone.R;
 import io.github.hmzi67.securezone.Widgets.ProgressStatus;
 import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  {
     private ActivityMainBinding binding;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase firebaseDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +80,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_home);
+//            navigationView.setCheckedItem(R.id.nav_home);
         }
+
+        navigationView.getHeaderView(1).findViewById(R.id.nav_home).setOnClickListener(view -> {
+            Toast.makeText(this, "Home Clicked", Toast.LENGTH_SHORT).show();
+        });
+
+//        navigationView.setNavigationItemSelectedListener(item -> {
+//            int itemId = item.getItemId();
+//
+//            if (itemId == R.id.nav_home) {
+//                Toast.makeText(MainActivity.this, "Home Clicked", Toast.LENGTH_SHORT).show();
+//            } else if (itemId == R.id.nav_logout) {
+//                Toast.makeText(MainActivity.this, "Logout Clicked", Toast.LENGTH_SHORT).show();
+//            } else if (itemId == R.id.nav_about) {
+//                Toast.makeText(MainActivity.this, "About Clicked", Toast.LENGTH_SHORT).show();
+//            }
+//            binding.drawerLayout.closeDrawer(GravityCompat.START);
+//            return true;
+//        });
+
         replaceFragment(new HomeFragment());
 
         bottomNavigationView.setBackground(null);
@@ -90,15 +120,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showBottomDialog();
-            }
-        });
+        fab.setOnClickListener(view -> showBottomDialog());
 
 
         init();
+    }
+
+    private void init() {
+        // ready the firebase
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        // getting user image
+        firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users users = snapshot.getValue(Users.class);
+                assert users != null;
+                TextView tx = binding.navView.getHeaderView(0).findViewById(R.id.userName);
+                tx.setText(users.getUserName());
+                TextView tx1 = binding.navView.getHeaderView(0).findViewById(R.id.userEmail);
+                tx1.setText(users.getUserEmail());
+                CircleImageView cv = binding.navView.getHeaderView(0).findViewById(R.id.userImg);
+//                Picasso.get().load(users.getUserProfileImg()).placeholder(R.drawable.ic_logo).into(cv);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -119,42 +172,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LinearLayout liveLayout = dialog.findViewById(R.id.layoutLive);
         ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
 
-        videoLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this,"Upload a Video is clicked",Toast.LENGTH_SHORT).show();
-
-            }
+        videoLayout.setOnClickListener(view -> {
+            dialog.dismiss();
+            Toast.makeText(MainActivity.this,"Upload a Video is clicked",Toast.LENGTH_SHORT).show();
         });
 
-        shortsLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this,"Create a short is Clicked",Toast.LENGTH_SHORT).show();
-
-            }
+        shortsLayout.setOnClickListener(view -> {
+            dialog.dismiss();
+            Toast.makeText(MainActivity.this,"Create a short is Clicked",Toast.LENGTH_SHORT).show();
         });
 
-        liveLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this,"Go live is Clicked",Toast.LENGTH_SHORT).show();
-
-            }
+        liveLayout.setOnClickListener(view -> {
+            dialog.dismiss();
+            Toast.makeText(MainActivity.this,"Go live is Clicked",Toast.LENGTH_SHORT).show();
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
+        cancelButton.setOnClickListener(view -> dialog.dismiss());
 
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -162,33 +195,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
 
-    }
-
-
-    private void init() {
-        // binding.test.setOnClickListener(view -> startActivity(new Intent(this, VerificationActivity.class)));
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.nav_home) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-
-            } else if (itemId == R.id.nav_logout) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SecurityGestureFragment()).commit();
-
-            } else if (itemId == R.id.nav_about) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddContactFragment()).commit();
-
-            } else if (itemId == R.id.nav_logout) {
-                Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show();
-
-        }
-        binding.drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
     }
 }
 

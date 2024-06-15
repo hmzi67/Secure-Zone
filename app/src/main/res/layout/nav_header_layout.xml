@@ -3,28 +3,30 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="176dp"
+    android:layout_height="wrap_content"
     android:gravity="bottom"
     android:padding="16dp"
-    android:background="@color/primary_Color"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:background="@color/primary_Color" >
 
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/userImg"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:src="@drawable/ic_logo"/>
 
     <TextView
+        android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Android Knowledge"
+        android:text="..."
         android:textColor="@color/white"
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/userEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="contact@androidknowledge.com"
+        android:text="..."
         android:textColor="@color/white"
         android:textSize="14sp"
         android:layout_marginBottom="16dp"/>
