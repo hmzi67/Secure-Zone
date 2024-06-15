@@ -91,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Invalid Email! Please enter valid email", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private boolean isValid(String email) {
