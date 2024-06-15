@@ -24,6 +24,7 @@
             android:background="@color/bg_Color"
             app:navigationIcon="@drawable/ic_add_person"
             android:elevation="6dp" >
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
