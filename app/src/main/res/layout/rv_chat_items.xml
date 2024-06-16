@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_message_item"
         android:padding="8dp"
-        android:backgroundTint="#C6C6C6"
+        android:backgroundTint="#eeeeee"
         android:orientation="vertical"
         android:layout_marginEnd="80dp"
         android:minWidth="100dp">

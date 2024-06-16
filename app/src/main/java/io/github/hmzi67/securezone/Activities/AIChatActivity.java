@@ -1,5 +1,6 @@
 package io.github.hmzi67.securezone.Activities;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -10,6 +11,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.ai.client.generativeai.BuildConfig;
+import com.google.ai.client.generativeai.GenerativeModel;
+import com.google.ai.client.generativeai.java.ChatFutures;
+import com.google.ai.client.generativeai.java.GenerativeModelFutures;
+import com.google.ai.client.generativeai.type.Content;
+import com.google.ai.client.generativeai.type.GenerateContentResponse;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,7 +27,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import io.github.hmzi67.securezone.Adapters.MessageAdapter;
 import io.github.hmzi67.securezone.Modals.AllMessagesModel;
@@ -65,13 +79,48 @@ public class AIChatActivity extends AppCompatActivity {
         // on message sent.
         binding.sendBtn.setOnClickListener(view -> {
             AllMessagesModel model = new AllMessagesModel(binding.messageText.getText().toString(), "ME");
+            String query = binding.messageText.getText().toString();
             binding.messageText.setText("");
             firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Chat").push().setValue(model).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     getMessages();
+                    getAIResponse(query);
                 }
             });
         });
+
+    }
+
+    private void getAIResponse(String query) {
+        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", "");
+        GenerativeModelFutures model = GenerativeModelFutures.from(gm);
+
+        Content content = new Content.Builder()
+                .addText(query)
+                .build();
+
+        Executor executor =  Executors.newFixedThreadPool(10);
+
+        ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
+
+        Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
+            @Override
+            public void onSuccess(GenerateContentResponse result) {
+                String resultText = result.getText();
+                AllMessagesModel model = new AllMessagesModel(resultText, "BOT");
+                binding.messageText.setText("");
+                firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Chat").push().setValue(model).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        getMessages();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+            }
+        }, executor);
     }
 
     private void getMessages() {
@@ -86,6 +135,7 @@ public class AIChatActivity extends AppCompatActivity {
                         allMessages.add(model);
                     }
                     adapter.notifyDataSetChanged();
+                    binding.rvUserChat.scrollToPosition(allMessages.size() -1);
                 } else {
                     binding.introChatScreen.setVisibility(View.VISIBLE);
                 }
