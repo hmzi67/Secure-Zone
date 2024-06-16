@@ -1,6 +1,7 @@
 package io.github.hmzi67.securezone.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import io.github.hmzi67.securezone.Activities.EditContactActivity;
 import io.github.hmzi67.securezone.Modals.FakeCallModel;
 import io.github.hmzi67.securezone.R;
 
@@ -40,6 +42,11 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
         holder.callName.setText(fakeCalls.get(position).getCallName());
         holder.callNumber.setText(fakeCalls.get(position).getCallNumber());
 
+        holder.editContact.setOnClickListener(view -> {
+            context.startActivity(new Intent(context, EditContactActivity.class));
+        });
+
+        // call goes here.
         holder.container.setOnClickListener(view -> {
             Toast.makeText(context, "call started", Toast.LENGTH_SHORT).show();
         });
@@ -52,6 +59,7 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private CardView container;
+        private ImageView editContact;
         private ImageView callImage;
         private TextView callName;
         private TextView callNumber;
@@ -63,6 +71,7 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
             callImage = itemView.findViewById(R.id.callImage);
             callName = itemView.findViewById(R.id.callName);
             callNumber = itemView.findViewById(R.id.callNumber);
+            editContact = itemView.findViewById(R.id.editContact);
         }
     }
 }

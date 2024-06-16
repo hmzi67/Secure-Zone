@@ -130,22 +130,22 @@ public class MainActivity extends AppCompatActivity  {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
-            if (itemId == R.id.bottom_navigation_home) {
+            if (itemId == R.id.bottom_navigation_home)
                 replaceFragment(new HomeFragment());
-            } else if (itemId == R.id.bottom_navigation_fakeCall) {
+            else if (itemId == R.id.bottom_navigation_fakeCall)
                 replaceFragment(new FakeCallFragment());
-            } else if (itemId == R.id.bottom_navigation_addPerson) {
+            else if (itemId == R.id.bottom_navigation_addPerson)
                 replaceFragment(new AddContactFragment());
-            } else if (itemId == R.id.bottom_navigation_google) {
+            else if (itemId == R.id.bottom_navigation_google)
                 replaceFragment(new SecurityGestureFragment());
-            }
+            else if (itemId == R.id.bottom_navigation_SOS)
+                replaceFragment(new SosFragment());
+
 
             return true;
         });
 
-        fab.setOnClickListener(view -> {
-            startActivity(new Intent(this, AIChatActivity.class));
-        });
+        fab.setOnClickListener(view -> startActivity(new Intent(this, AIChatActivity.class)));
 
 
         init();
