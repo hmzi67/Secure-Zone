@@ -2,12 +2,19 @@ package io.github.hmzi67.securezone.Fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -21,6 +28,9 @@ public class FakeCallFragment extends Fragment {
     private FragmentFakeCallBinding binding;
     private ArrayList<FakeCallModel> fakeCalls;
     private FakeCallAdapter adapter;
+
+    private FirebaseDatabase firebaseDatabase;
+    private FirebaseAuth firebaseAuth;
 
     public FakeCallFragment() {
         // Required empty public constructor
@@ -36,6 +46,9 @@ public class FakeCallFragment extends Fragment {
     }
 
     private void init() {
+        // initialize the database
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
 
         fakeCalls = new ArrayList<>();
@@ -48,12 +61,21 @@ public class FakeCallFragment extends Fragment {
     }
 
     private void getUsers() {
-        // getting data from db
-        FakeCallModel model = new FakeCallModel("", "A", "909090909008");
-        fakeCalls.add(model);
-        fakeCalls.add(model);
-        fakeCalls.add(model);
+        firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Contacts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (fakeCalls != null) fakeCalls.clear();
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    FakeCallModel model = ds.getValue(FakeCallModel.class);
+                    fakeCalls.add(model);
+                }
+                adapter.notifyDataSetChanged();
+            }
 
-        adapter.notifyDataSetChanged();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

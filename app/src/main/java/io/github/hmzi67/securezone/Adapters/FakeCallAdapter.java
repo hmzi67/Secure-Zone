@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import io.github.hmzi67.securezone.Activities.EditContactActivity;
@@ -39,6 +41,8 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull FakeCallAdapter.ViewHolder holder, int position) {
+        if (holder.callImage != null)
+            Picasso.get().load(fakeCalls.get(position).getCallImage()).into(holder.callImage);
         holder.callName.setText(fakeCalls.get(position).getCallName());
         holder.callNumber.setText(fakeCalls.get(position).getCallNumber());
 
