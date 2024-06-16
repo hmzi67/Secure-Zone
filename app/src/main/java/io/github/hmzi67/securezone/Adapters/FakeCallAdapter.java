@@ -47,7 +47,12 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
         holder.callNumber.setText(fakeCalls.get(position).getCallNumber());
 
         holder.editContact.setOnClickListener(view -> {
-            context.startActivity(new Intent(context, EditContactActivity.class));
+            Intent editContact = new Intent(context, EditContactActivity.class);
+            editContact.putExtra("id", fakeCalls.get(position).getCallId());
+            editContact.putExtra("userphoto", fakeCalls.get(position).getCallImage());
+            editContact.putExtra("username", fakeCalls.get(position).getCallName());
+            editContact.putExtra("usernumber", fakeCalls.get(position).getCallNumber());
+            context.startActivity(editContact);
         });
 
         // call goes here.

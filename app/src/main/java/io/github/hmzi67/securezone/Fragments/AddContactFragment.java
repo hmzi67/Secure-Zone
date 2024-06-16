@@ -95,7 +95,7 @@ public class AddContactFragment extends Fragment {
 
     private void saveContact() {
         String userName = binding.userName.getText().toString();
-        String userNumber = binding.userName.getText().toString();
+        String userNumber = binding.userPhoneNumber.getText().toString();
         progressStatus = new ProgressStatus(getContext());
         progressStatus.setTitle("Creating Contact");
 
@@ -106,7 +106,7 @@ public class AddContactFragment extends Fragment {
             ref.putFile(filePath).addOnSuccessListener(taskSnapshot -> {
                 ref.getDownloadUrl().addOnSuccessListener(uri -> {
                     downloadURL = uri.toString();
-                    FakeCallModel contact = new FakeCallModel(downloadURL, userName, userNumber);
+                    FakeCallModel contact = new FakeCallModel("", downloadURL, userName, userNumber);
                     firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Contacts").push().setValue(contact).addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             progressStatus.dismiss();

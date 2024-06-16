@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,7 @@ public class FakeCallFragment extends Fragment {
                 if (fakeCalls != null) fakeCalls.clear();
                 for (DataSnapshot ds: snapshot.getChildren()) {
                     FakeCallModel model = ds.getValue(FakeCallModel.class);
+                    model.setCallId(ds.getKey());
                     fakeCalls.add(model);
                 }
                 adapter.notifyDataSetChanged();
