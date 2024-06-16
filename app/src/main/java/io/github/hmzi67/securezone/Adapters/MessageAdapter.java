@@ -11,8 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import io.github.hmzi67.securezone.Modals.AllMessagesModel;
 import io.github.hmzi67.securezone.R;
-import io.github.uxlabspk.cloudmeeting.Models.AllMessagesModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,19 +32,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AllMessagesModel message = allMessages.get(position);
-        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
 
-        if (message.getSentBy().matches("M")) {
+        if (message.getSentBy().matches("ME")) {
             holder.left_chat_view.setVisibility(View.GONE);
             holder.right_chat_view.setVisibility(View.VISIBLE);
             holder.right_chat_text.setText(message.getMessage());
-//            holder.right_chat_text_time.setText(formatter.format(new Time(Long.parseLong(time + ""))));
-            holder.chat_read_status.setVisibility(message.isSeen() ? View.VISIBLE : View.GONE);
         } else {
             holder.right_chat_view.setVisibility(View.GONE);
             holder.left_chat_view.setVisibility(View.VISIBLE);
             holder.left_chat_text.setText(message.getMessage());
-//            holder.left_chat_text_time.setText(new TimeFormatter(message.getSentTime()).formattedTime());
         }
 
     }
@@ -62,8 +58,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout left_chat_view, right_chat_view;
         TextView left_chat_text, right_chat_text;
-        TextView right_chat_text_time, left_chat_text_time;
-        ImageView chat_read_status;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,8 +66,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             right_chat_view = itemView.findViewById(R.id.right_chat_view);
             left_chat_text = itemView.findViewById(R.id.left_chat_text);
             right_chat_text = itemView.findViewById(R.id.right_chat_text);
-            left_chat_text_time = itemView.findViewById(R.id.left_chat_text_time);
-            right_chat_text_time = itemView.findViewById(R.id.right_chat_text_time);
         }
     }
 }
