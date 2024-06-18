@@ -4,6 +4,7 @@ import static androidx.core.content.ContextCompat.startActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -58,8 +59,16 @@ import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity  {
     private ActivityMainBinding binding;
+    private SharedPreferences pref;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pref = getSharedPreferences("Settings", MODE_PRIVATE);
+        binding.fab.setVisibility(pref.getBoolean("AI", false) ? View.VISIBLE : View.GONE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,20 +119,6 @@ public class MainActivity extends AppCompatActivity  {
 //            navigationView.setCheckedItem(R.id.nav_home);
         }
 
-//        navigationView.setNavigationItemSelectedListener(item -> {
-//            int itemId = item.getItemId();
-//
-//            if (itemId == R.id.nav_home) {
-//                Toast.makeText(MainActivity.this, "Home Clicked", Toast.LENGTH_SHORT).show();
-//            } else if (itemId == R.id.nav_logout) {
-//                Toast.makeText(MainActivity.this, "Logout Clicked", Toast.LENGTH_SHORT).show();
-//            } else if (itemId == R.id.nav_about) {
-//                Toast.makeText(MainActivity.this, "About Clicked", Toast.LENGTH_SHORT).show();
-//            }
-//            binding.drawerLayout.closeDrawer(GravityCompat.START);
-//            return true;
-//        });
-
         replaceFragment(new HomeFragment());
 
         bottomNavigationView.setBackground(null);
@@ -145,8 +140,8 @@ public class MainActivity extends AppCompatActivity  {
             return true;
         });
 
-        fab.setOnClickListener(view -> startActivity(new Intent(this, AIChatActivity.class)));
 
+        fab.setOnClickListener(view -> startActivity(new Intent(this, AIChatActivity.class)));
 
         init();
     }

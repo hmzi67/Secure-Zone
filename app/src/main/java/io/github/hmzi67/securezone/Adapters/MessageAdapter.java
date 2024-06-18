@@ -1,12 +1,16 @@
 package io.github.hmzi67.securezone.Adapters;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,6 +47,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.left_chat_text.setText(message.getMessage());
         }
 
+        // copy message text
+        holder.copyLeftText.setOnClickListener(view -> {
+            copyToClipboard(context, holder.left_chat_text.getText().toString());
+        });
+
+        holder.copyRightText.setOnClickListener(view -> {
+            copyToClipboard(context, holder.right_chat_text.getText().toString());
+        });
+
+    }
+
+    private void copyToClipboard(Context context, String text) {
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("Message Text ", text);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(context, "Text copied to clipboard", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -58,6 +78,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout left_chat_view, right_chat_view;
         TextView left_chat_text, right_chat_text;
+        ImageButton copyLeftText, copyRightText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -66,6 +87,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             right_chat_view = itemView.findViewById(R.id.right_chat_view);
             left_chat_text = itemView.findViewById(R.id.left_chat_text);
             right_chat_text = itemView.findViewById(R.id.right_chat_text);
+            copyLeftText = itemView.findViewById(R.id.copyLeftText);
+            copyRightText = itemView.findViewById(R.id.copyRightText);
         }
     }
 }

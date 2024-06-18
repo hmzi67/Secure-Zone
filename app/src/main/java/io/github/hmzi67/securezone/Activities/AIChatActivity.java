@@ -3,6 +3,7 @@ package io.github.hmzi67.securezone.Activities;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -65,8 +66,6 @@ public class AIChatActivity extends AppCompatActivity {
         // go back
         binding.goBack.setOnClickListener(view -> onBackPressed());
 
-        // getMessages();
-
         // setting the recycler view
         adapter = new MessageAdapter();
         adapter.setAllMessages(allMessages, this);
@@ -78,21 +77,34 @@ public class AIChatActivity extends AppCompatActivity {
 
         // on message sent.
         binding.sendBtn.setOnClickListener(view -> {
-            AllMessagesModel model = new AllMessagesModel(binding.messageText.getText().toString(), "ME");
-            String query = binding.messageText.getText().toString();
-            binding.messageText.setText("");
-            firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Chat").push().setValue(model).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    getMessages();
-                    getAIResponse(query);
-                }
-            });
+            if (!binding.messageText.getText().toString().isEmpty()) {
+                AllMessagesModel model = new AllMessagesModel(binding.messageText.getText().toString(), "ME");
+                String query = binding.messageText.getText().toString();
+                binding.messageText.setText("");
+                firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Chat").push().setValue(model).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        getMessages();
+                        getAIResponse(query);
+                    }
+                });
+            }
         });
 
+        // delete the chat
+        binding.deleteChat.setOnClickListener(view -> {
+            firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Chat").removeValue().addOnCompleteListener(task -> {
+               if (task.isSuccessful()) {
+                   allMessages.clear();
+                   adapter.notifyDataSetChanged();
+                   Toast.makeText(this, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+               }
+            });
+        });
     }
 
     private void getAIResponse(String query) {
-        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", "");
+        binding.aiStatus.setText("Thinking...");
+        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", "AIzaSyDN_C7WFOdTiBxQ_0ABEoh5X0ZQl_pWWag");
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
 
         Content content = new Content.Builder()
@@ -107,6 +119,7 @@ public class AIChatActivity extends AppCompatActivity {
             @Override
             public void onSuccess(GenerateContentResponse result) {
                 String resultText = result.getText();
+                runOnUiThread(() -> binding.aiStatus.setText("Online"));
                 AllMessagesModel model = new AllMessagesModel(resultText, "BOT");
                 binding.messageText.setText("");
                 firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Chat").push().setValue(model).addOnCompleteListener(task -> {
@@ -138,6 +151,8 @@ public class AIChatActivity extends AppCompatActivity {
                     binding.rvUserChat.scrollToPosition(allMessages.size() -1);
                 } else {
                     binding.introChatScreen.setVisibility(View.VISIBLE);
+                    allMessages.clear();
+                    adapter.notifyDataSetChanged();
                 }
             }
 

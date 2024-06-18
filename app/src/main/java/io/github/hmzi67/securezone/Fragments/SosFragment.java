@@ -1,14 +1,21 @@
 package io.github.hmzi67.securezone.Fragments;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.CountDownTimer;
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 
 import io.github.hmzi67.securezone.R;
 import io.github.hmzi67.securezone.databinding.FragmentSosBinding;
@@ -17,8 +24,6 @@ import io.github.hmzi67.securezone.databinding.FragmentSosBinding;
 public class SosFragment extends Fragment {
     private FragmentSosBinding binding;
     private CountDownTimer countDownTimer;
-    private final int COUNTDOWN_SECONDS = 3;
-    private boolean isLongPress;
 
     public SosFragment() {
         // Required empty public constructor
@@ -65,5 +70,4 @@ public class SosFragment extends Fragment {
         }.start();
 
     }
-
 }
