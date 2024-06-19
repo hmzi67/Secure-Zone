@@ -35,6 +35,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarItemView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -57,7 +58,7 @@ import io.github.hmzi67.securezone.R;
 import io.github.hmzi67.securezone.Widgets.ProgressStatus;
 import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private SharedPreferences pref;
     private FirebaseAuth firebaseAuth;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity  {
     protected void onResume() {
         super.onResume();
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
-//        binding.fab.setVisibility(pref.getBoolean("AI", false) ? View.VISIBLE : View.GONE);
+        binding.fab.setVisibility(pref.getBoolean("AI", false) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -77,8 +78,8 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(binding.getRoot());
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-//        BottomNavigationView bottomNavigationView = binding.bottomNavigationView;
-//        FloatingActionButton fab = binding.fab;
+        BottomNavigationView bottomNavigationView = binding.bottomNavigationView;
+        FloatingActionButton fab = binding.fab;
         Toolbar toolbar = binding.homeToolbar;
         NavigationView navigationView = binding.navView;
         DrawerLayout drawerLayout = binding.drawerLayout;
@@ -116,32 +117,51 @@ public class MainActivity extends AppCompatActivity  {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-//            navigationView.setCheckedItem(R.id.nav_home);
+            navigationView.setCheckedItem(R.id.nav_home);
         }
 
         replaceFragment(new HomeFragment());
 
-//        bottomNavigationView.setBackground(null);
-//        bottomNavigationView.setOnItemSelectedListener(item -> {
-//            int itemId = item.getItemId();
-//
-//            if (itemId == R.id.bottom_navigation_home)
-//                replaceFragment(new HomeFragment());
-//            else if (itemId == R.id.bottom_navigation_fakeCall)
-//                replaceFragment(new FakeCallFragment());
-//            else if (itemId == R.id.bottom_navigation_addPerson)
-//                replaceFragment(new AddContactFragment());
-//            else if (itemId == R.id.bottom_navigation_google)
-//                replaceFragment(new SecurityGestureFragment());
-//            else if (itemId == R.id.bottom_navigation_SOS)
-//                replaceFragment(new SosFragment());
-//
-//
-//            return true;
-//        });
+        bottomNavigationView.setBackground(null);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.bottom_navigation_home)
+                replaceFragment(new HomeFragment());
+            else if (itemId == R.id.bottom_navigation_fakeCall)
+                replaceFragment(new FakeCallFragment());
+            else if (itemId == R.id.bottom_navigation_addPerson)
+                replaceFragment(new AddContactFragment());
+            else if (itemId == R.id.bottom_navigation_google)
+                replaceFragment(new SecurityGestureFragment());
+            else if (itemId == R.id.bottom_navigation_SOS)
+                replaceFragment(new SosFragment());
 
 
-//        fab.setOnClickListener(view -> startActivity(new Intent(this, AIChatActivity.class)));
+            return true;
+        });
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                replaceFragment(new HomeFragment());
+            } else if (id == R.id.nav_settings) {
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            } else if (id == R.id.nav_about) {
+                replaceFragment(new SosFragment());
+            } else if (id == R.id.nav_logout) {
+                firebaseAuth.signOut();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+
+
+        fab.setOnClickListener(view -> startActivity(new Intent(this, AIChatActivity.class)));
 
         init();
     }
