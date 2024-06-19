@@ -56,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         progressStatus.setCanceledOnTouchOutside(false);
         progressStatus.setTitle("Authenticating...");
 
-
         // perform login
         binding.loginButton.setOnClickListener(view -> {
             loginUser();
