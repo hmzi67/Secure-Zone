@@ -109,6 +109,7 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:textAlignment="textStart"
+                    android:background="@drawable/bg_message"
                     android:layout_marginTop="40dp"
                     android:drawableEnd="@drawable/ic_edit"
                     />
@@ -120,6 +121,7 @@
                     android:text="Delete Account"
                     android:textColor="@color/black"
                     android:textAllCaps="false"
+                    android:background="@drawable/bg_message"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:paddingStart="10dp"
@@ -132,6 +134,7 @@
                 <android.widget.Button
                     android:id="@+id/edu_user_logout"
                     android:layout_width="match_parent"
+                    android:background="@drawable/bg_message"
                     android:layout_height="wrap_content"
                     android:text="Logout"
                     android:textColor="@color/black"
