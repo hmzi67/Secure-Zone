@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity  {
     protected void onResume() {
         super.onResume();
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
-        binding.fab.setVisibility(pref.getBoolean("AI", false) ? View.VISIBLE : View.GONE);
+//        binding.fab.setVisibility(pref.getBoolean("AI", false) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(binding.getRoot());
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        BottomNavigationView bottomNavigationView = binding.bottomNavigationView;
-        FloatingActionButton fab = binding.fab;
+//        BottomNavigationView bottomNavigationView = binding.bottomNavigationView;
+//        FloatingActionButton fab = binding.fab;
         Toolbar toolbar = binding.homeToolbar;
         NavigationView navigationView = binding.navView;
         DrawerLayout drawerLayout = binding.drawerLayout;
@@ -121,27 +121,27 @@ public class MainActivity extends AppCompatActivity  {
 
         replaceFragment(new HomeFragment());
 
-        bottomNavigationView.setBackground(null);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
+//        bottomNavigationView.setBackground(null);
+//        bottomNavigationView.setOnItemSelectedListener(item -> {
+//            int itemId = item.getItemId();
+//
+//            if (itemId == R.id.bottom_navigation_home)
+//                replaceFragment(new HomeFragment());
+//            else if (itemId == R.id.bottom_navigation_fakeCall)
+//                replaceFragment(new FakeCallFragment());
+//            else if (itemId == R.id.bottom_navigation_addPerson)
+//                replaceFragment(new AddContactFragment());
+//            else if (itemId == R.id.bottom_navigation_google)
+//                replaceFragment(new SecurityGestureFragment());
+//            else if (itemId == R.id.bottom_navigation_SOS)
+//                replaceFragment(new SosFragment());
+//
+//
+//            return true;
+//        });
 
-            if (itemId == R.id.bottom_navigation_home)
-                replaceFragment(new HomeFragment());
-            else if (itemId == R.id.bottom_navigation_fakeCall)
-                replaceFragment(new FakeCallFragment());
-            else if (itemId == R.id.bottom_navigation_addPerson)
-                replaceFragment(new AddContactFragment());
-            else if (itemId == R.id.bottom_navigation_google)
-                replaceFragment(new SecurityGestureFragment());
-            else if (itemId == R.id.bottom_navigation_SOS)
-                replaceFragment(new SosFragment());
 
-
-            return true;
-        });
-
-
-        fab.setOnClickListener(view -> startActivity(new Intent(this, AIChatActivity.class)));
+//        fab.setOnClickListener(view -> startActivity(new Intent(this, AIChatActivity.class)));
 
         init();
     }
