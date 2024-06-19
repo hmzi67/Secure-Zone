@@ -104,7 +104,7 @@ public class AIChatActivity extends AppCompatActivity {
 
     private void getAIResponse(String query) {
         binding.aiStatus.setText("Thinking...");
-        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", "AIzaSyDN_C7WFOdTiBxQ_0ABEoh5X0ZQl_pWWag");
+        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", "");
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
 
         Content content = new Content.Builder()
