@@ -16,7 +16,7 @@
     <item
         android:id="@+id/bottom_navigation_SOS"
         android:title="SOS"
-        android:icon="@drawable/ic_add_person"/>
+        android:icon="@drawable/ic_sos"/>
 
     <item
         android:id="@+id/bottom_navigation_addPerson"

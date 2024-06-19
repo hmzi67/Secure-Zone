@@ -22,7 +22,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:background="@color/bg_Color"
-            app:navigationIcon="@drawable/ic_add_person"
             android:elevation="6dp" >
 
             <LinearLayout
@@ -66,7 +65,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/white"
             app:fabCradleMargin="10dp"
             app:fabCradleRoundedCornerRadius="50dp">
 
@@ -84,6 +82,7 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="AI Assistant"
             android:src="@drawable/ic_assistant"
             app:layout_anchor="@id/bottomAppBar"
             app:maxImageSize="40dp"
@@ -95,6 +94,7 @@
              />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
