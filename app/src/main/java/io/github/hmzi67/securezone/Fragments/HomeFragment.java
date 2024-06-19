@@ -29,8 +29,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void init() {
-        binding.settingsButton.setOnClickListener(view -> {
-            getContext().startActivity(new Intent(getContext(), SettingsActivity.class));
-        });
+
     }
 }
