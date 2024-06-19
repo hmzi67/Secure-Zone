@@ -1,3 +1,49 @@
 <resources>
     <string name="app_name">Secure Zone</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="open_nav">Open Navigation Drawer</string>
+    <string name="close_nav">Close Navigation Drawer</string>
+
+    <string name="protectionTipsString">
+        <li>Always be aware of your surroundings and
+      trust your instincts.</li>
+        <li>Keep your phone charged and easily
+      accessible.</li>
+        <li>Share your location with a trusted friend and
+     family member.</li>
+        <li>Carry a personal safety alarm or whistle.</li>
+        <li>Learn basic self defense techniques.</li>
+        <li>Avoid sharing personal information with any
+     strangers.</li>
+        <li>Stay alert using public transportation.</li>
+    </string>
+
+    <string name="fireSafety">
+        Drop, Cover, and Hold: \nIn the event of a fire, remember to drop to the
+ground, cover your mouth and nose with a cloth,
+and hold on until the danger has passed.
+    </string>
+    <string name="distressSignal">
+            Signal in case of kidnapping, domestic violence or in
+        any harm.\n
+        <li>
+            Raising your hand with your palm facing inward,
+            tucking your thumb inside your fist, and closing your fingers over it.
+        </li>
+    </string>
+    <string name="safety_tips_alone">
+            <item><b>Stick to Well-Lit and Populated Areas:</b> Avoid walking alone in deserted or poorly lit areas, especially at night.\n\n</item>
+            <item><b>Plan Your Route:</b> Know where you\'re going and how you\'ll get there before you head out.\n\n</item>
+            <item><b>Trust Your Gut:</b> If a situation feels unsafe, remove yourself from it. Don\'t be afraid to change course or call for a ride.\n\n</item>
+            <item><b>Limit Distractions:</b> Avoid wearing headphones with loud music or being engrossed in your phone while walking alone. Stay alert to your surroundings.\n\n</item>
+            <item><b>Carry Less Valuables:</b> Take only what you need and avoid carrying large sums of cash or expensive jewelry.\n\n</item>
+        </string>
+    <string name="videocapturing">Video Streaming will start with your front\ncamera tured on by default if this option \nis activated.</string>
+    <string name="image_capturing">Image Capturing will start with your front\ncamera turned on by default if this option \nis activated.</string>
+    <string name="live_alert">Receive live alerts: Stay informed\n and safe with real-time location \nupdates by turning it on.</string>
+    <string name="noisy_sound">Activate noisy sound feature: Instantly \ngenerate loud alerts when needed, ensuring swift \nresponse and enhanced personal safety.</string>
+    <string name="audio_recording">"Audio recording capabilities to capture \nevidence "</string>
+    <string name="ai_assistance">"It works as a Google Assistant, It will automatically \nsend SOS on one call. "</string>
 </resources>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp" >
+
+    <LinearLayout
+        android:id="@+id/left_chat_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_message_item"
+        android:padding="8dp"
+        android:backgroundTint="#eeeeee"
+        android:orientation="vertical"
+        android:layout_marginEnd="80dp"
+        android:minWidth="100dp">
+
+        <TextView
+            android:id="@+id/left_chat_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:text="sdfsdfsdf" />
+
+
+        <ImageButton
+            android:id="@+id/copyLeftText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_copy"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="#eeeeee"
+            android:padding="10dp"
+            android:layout_gravity="end"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/right_chat_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_message_item"
+        android:padding="8dp"
+        android:backgroundTint="#0080ff"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical"
+        android:layout_marginStart="80dp"
+        android:minWidth="100dp" >
+
+        <TextView
+            android:id="@+id/right_chat_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:text="sdfsdf" />
+
+        <ImageButton
+            android:id="@+id/copyRightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_copy"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="#0080ff"
+            android:padding="10dp"
+            android:layout_gravity="end"
+            app:tint="@color/white" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>
