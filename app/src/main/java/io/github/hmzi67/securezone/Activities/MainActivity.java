@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_settings) {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             } else if (id == R.id.nav_about) {
-                replaceFragment(new SosFragment());
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
             } else if (id == R.id.nav_logout) {
                 firebaseAuth.signOut();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
