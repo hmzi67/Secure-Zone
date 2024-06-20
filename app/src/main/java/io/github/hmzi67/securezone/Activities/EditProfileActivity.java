@@ -162,11 +162,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
                             // app purpose radio buttons
                             purpose = "";
-                            if (binding.radioButton1.isChecked()) purpose = "Work";
-                            if (binding.radioButton2.isChecked()) purpose = "Travel";
-                            if (binding.radioButton3.isChecked()) purpose = "School";
-                            if (binding.radioButton4.isChecked()) purpose = "Family";
-                            if (binding.radioButton5.isChecked()) purpose = "Peace of Mind";
+                            if (binding.workRadioButton.isChecked()) purpose = "Work";
+                            if (binding.travelRadioButton.isChecked()) purpose = "Travel";
+                            if (binding.schoolRadioButton.isChecked()) purpose = "School";
+                            if (binding.familyRadioButton.isChecked()) purpose = "Family";
+                            if (binding.peaceRadioButton.isChecked()) purpose = "Peace of Mind";
 
                             user.setUserProfileImg(downloadURL);
                             user.setUserCountry(binding.countryCode.getSelectedCountryName().toString());
@@ -201,11 +201,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
                         // app purpose radio buttons
                         purpose = "";
-                        if (binding.radioButton1.isChecked()) purpose = "Work";
-                        if (binding.radioButton2.isChecked()) purpose = "Travel";
-                        if (binding.radioButton3.isChecked()) purpose = "School";
-                        if (binding.radioButton4.isChecked()) purpose = "Family";
-                        if (binding.radioButton5.isChecked()) purpose = "Peace of Mind";
+                        if (binding.workRadioButton.isChecked()) purpose = "Work";
+                        if (binding.travelRadioButton.isChecked()) purpose = "Travel";
+                        if (binding.schoolRadioButton.isChecked()) purpose = "School";
+                        if (binding.familyRadioButton.isChecked()) purpose = "Family";
+                        if (binding.peaceRadioButton.isChecked()) purpose = "Peace of Mind";
 
                         user.setUserCountry(binding.countryCode.getSelectedCountryName().toString());
                         user.setUserDateOfBirth(binding.dateOfBirth.getText().toString());

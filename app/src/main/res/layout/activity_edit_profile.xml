@@ -178,7 +178,7 @@
                         >
 
                         <RadioButton
-                            android:id="@+id/radioButton1"
+                            android:id="@+id/workRadioButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -189,7 +189,7 @@
                             android:text="Work" />
 
                         <RadioButton
-                            android:id="@+id/radioButton2"
+                            android:id="@+id/travelRadioButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -209,7 +209,7 @@
                         android:layout_marginTop="10dp">
 
                         <RadioButton
-                            android:id="@+id/radioButton3"
+                            android:id="@+id/schoolRadioButton"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:background="@drawable/bg_message"
@@ -220,7 +220,7 @@
                             android:text="School" />
 
                         <RadioButton
-                            android:id="@+id/radioButton4"
+                            android:id="@+id/familyRadioButton"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -234,7 +234,7 @@
 
                     <!-- Third Line: One RadioButton -->
                     <RadioButton
-                        android:id="@+id/radioButton5"
+                        android:id="@+id/peaceRadioButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_message"
