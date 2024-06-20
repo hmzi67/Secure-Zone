@@ -66,6 +66,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
+                android:layout_marginBottom="60dp"
                 android:orientation="vertical">
 
                 <android.widget.EditText
@@ -153,11 +154,20 @@
                     />
 
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="What do you use SecureZone for ?"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
                 <RadioGroup
                     android:id="@+id/radioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     >
+
 
                     <!-- First Line: Two RadioButtons -->
                     <LinearLayout
@@ -174,7 +184,9 @@
                             android:layout_weight="1"
                             android:background="@drawable/bg_message"
                             android:layout_marginEnd="5dp"
-                            android:text="Option 1" />
+                            android:button="@drawable/ic_work"
+                            android:padding="12dp"
+                            android:text="Work" />
 
                         <RadioButton
                             android:id="@+id/radioButton2"
@@ -182,8 +194,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="5dp"
+                            android:button="@drawable/ic_travel"
+                            android:padding="12dp"
                             android:background="@drawable/bg_message"
-                            android:text="Option 2" />
+                            android:text="Travel" />
 
                     </LinearLayout>
 
@@ -200,8 +214,10 @@
                             android:layout_weight="1"
                             android:background="@drawable/bg_message"
                             android:layout_height="wrap_content"
+                            android:button="@drawable/ic_school"
+                            android:padding="12dp"
                             android:layout_marginEnd="5dp"
-                            android:text="Option 3" />
+                            android:text="School" />
 
                         <RadioButton
                             android:id="@+id/radioButton4"
@@ -210,7 +226,9 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_message"
                             android:layout_marginStart="5dp"
-                            android:text="Option 4" />
+                            android:button="@drawable/ic_family"
+                            android:padding="12dp"
+                            android:text="Family" />
 
                     </LinearLayout>
 
@@ -221,7 +239,9 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_message"
                         android:layout_marginTop="10dp"
-                        android:text="Option 5" />
+                        android:button="@drawable/ic_peace"
+                        android:padding="12dp"
+                        android:text="Peace of Mind" />
 
                 </RadioGroup>
 
