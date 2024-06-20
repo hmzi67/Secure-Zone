@@ -46,4 +46,10 @@ and hold on until the danger has passed.
     <string name="noisy_sound">Activate noisy sound feature: Instantly \ngenerate loud alerts when needed, ensuring swift \nresponse and enhanced personal safety.</string>
     <string name="audio_recording">"Audio recording capabilities to capture \nevidence "</string>
     <string name="ai_assistance">"It works as a Google Assistant, It will automatically \nsend SOS on one call. "</string>
+
+    <string-array name="gender">
+        <item>Female</item>
+        <item>Male</item>
+        <item>Others</item>
+    </string-array>
 </resources>

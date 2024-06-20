@@ -47,6 +47,7 @@ public class AboutActivity extends AppCompatActivity {
         // on edit profile
         binding.editProfile.setOnClickListener(view -> {
             // TODO
+            startActivity(new Intent(AboutActivity.this, EditProfileActivity.class));
         });
 
         // on delete account
