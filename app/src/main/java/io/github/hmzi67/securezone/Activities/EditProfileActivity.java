@@ -83,30 +83,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 this, android.R.layout.simple_spinner_dropdown_item, testArray );
         binding.selectGender.setAdapter(spinnerArrayAdapter);
 
-        // delete account
-//        binding.eduUserDelete.setOnClickListener(view -> {
-//            ConfirmDialog cd = new ConfirmDialog(EditProfileActivity.this);
-//            cd.setCanceledOnTouchOutside(false);
-//            cd.setDialog_headline("Confirm to Delete");
-//            cd.setDialog_body("Are you sure to delete your account and all data?");
-//            cd.setYes_btn_text("Delete");
-//            cd.setNo_btn_text("Cancel");
-//
-//            cd.getYes_btn().setOnClickListener(view1 -> {
-//                firebaseAuth.getCurrentUser().delete();
-//                firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid()).removeValue();
-//                startActivity(new Intent(EditProfileActivity.this, LoginActivity.class));
-//                finish();
-//                cd.dismiss();
-//            });
-//
-//            cd.getNo_btn().setOnClickListener(view2 -> {
-//                cd.dismiss();
-//            });
-//
-//            cd.show();
-//        });
-
         // image update
         binding.changeAvatar.setOnClickListener(view -> selectImage());
 
