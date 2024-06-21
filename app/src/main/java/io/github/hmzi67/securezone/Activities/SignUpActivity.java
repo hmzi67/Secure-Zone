@@ -10,17 +10,29 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -50,6 +62,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private ProgressStatus progressStatus;
 
+    private GoogleSignInClient googleSignInClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +91,58 @@ public class SignUpActivity extends AppCompatActivity {
 
          // Signup button clicked.
         binding.signupButton.setOnClickListener(view -> signUp());
+
+        // continue with google
+        binding.googleSignin.setOnClickListener(view -> {
+            continueGoogle();
+        });
     }
+
+    private void continueGoogle() {
+        GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.client_id))
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(SignUpActivity.this, options);
+
+        Intent intent = googleSignInClient.getSignInIntent();
+        activityResultLauncher.launch(intent);
+    }
+
+    private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == RESULT_OK) {
+                progressStatus = new ProgressStatus(SignUpActivity.this);
+                progressStatus.setTitle("Creating Account");
+                progressStatus.show();
+                Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+                try {
+                    GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);
+                    AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
+
+                    firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            String phoneNumber = firebaseAuth.getCurrentUser().getPhoneNumber() == null ? "" : firebaseAuth.getCurrentUser().getPhoneNumber();
+                            Users user = new Users(firebaseAuth.getCurrentUser().getDisplayName(), firebaseAuth.getCurrentUser().getEmail(), phoneNumber, firebaseAuth.getCurrentUser().getPhotoUrl().toString(), "", "", "", "");
+                            firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").setValue(user).addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    progressStatus.dismiss();
+                                    Toast.makeText(SignUpActivity.this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                                    finish();
+                                } else {
+                                    Toast.makeText(SignUpActivity.this, "Exception Occur", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+                } catch (ApiException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    });
 
     private void selectImage() {
         // Defining Implicit Intent to mobile gallery
