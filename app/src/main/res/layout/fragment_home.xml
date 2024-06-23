@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.HomeFragment">
 
     <org.osmdroid.views.MapView
@@ -10,5 +11,39 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
+        android:focusable="true"
+        android:layout_marginBottom="70dp"
+        >
+    </org.osmdroid.views.MapView>
+
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:contentDescription="track me"-->
+<!--        android:src="@drawable/ic_track_me"-->
+<!--        app:layout_anchor="@id/bottomAppBar"-->
+<!--        app:maxImageSize="40dp"-->
+<!--        android:layout_gravity="center |bottom"-->
+<!--        android:id="@+id/fab"-->
+<!--        android:layout_marginBottom="120dp"-->
+<!--        app:layout_anchorGravity="center"-->
+<!--        />-->
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/trackMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="120dp"
+        android:clickable="true"
+        android:src="@drawable/ic_track_me"
+        app:backgroundTint="@color/primary_Color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white"
+        android:layout_gravity="center | bottom"
+        tools:ignore="SpeakableTextPresentCheck"
+        android:contentDescription="add button"
         android:focusable="true" />
+
+
 </FrameLayout>

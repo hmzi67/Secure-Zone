@@ -7,6 +7,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,15 +28,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
+import io.github.hmzi67.securezone.Modals.LocationModel;
 import io.github.hmzi67.securezone.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
@@ -43,6 +53,14 @@ public class HomeFragment extends Fragment {
 
     private LocationManager locationManager;
     private LocationListener locationListener;
+
+    double latitude;
+    double longitude;
+
+    FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
+
+    String addressText;
 
     public HomeFragment() {
     }
@@ -56,6 +74,10 @@ public class HomeFragment extends Fragment {
     }
 
     private void init() {
+        // Ready the firebase
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
         Configuration.getInstance().load(getContext(), PreferenceManager.getDefaultSharedPreferences(getContext()));
 
         if (Build.VERSION.SDK_INT >= 23) {
@@ -70,39 +92,30 @@ public class HomeFragment extends Fragment {
         mapController = binding.mapView.getController();
         mapController.setZoom(15);
 
+
         //locationManager = getSystemService(Context.LOCATION_SERVICE);
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // Called when a new location is found by the network location provider.
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
+//                double latitude = location.getLatitude();
+//                double longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
 
                 GeoPoint startPoint = new GeoPoint(latitude, longitude);
                 mapController.setCenter(startPoint);
 
-                binding.mapView.getOverlays().clear();
-                // Add new marker for current location
-                Marker startMarker = new Marker(binding.mapView);
-                startMarker.setPosition(startPoint);
-                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                binding.mapView.getOverlays().add(startMarker);
-                binding.mapView.invalidate();
-
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
 
             @Override
-            public void onProviderEnabled(String provider) {
-            }
+            public void onProviderEnabled(String provider) {}
 
             @Override
-            public void onProviderDisabled(String provider) {
-            }
+            public void onProviderDisabled(String provider) {}
         };
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -111,6 +124,11 @@ public class HomeFragment extends Fragment {
         } else {
             startLocationUpdates();
         }
+
+        // on track me
+       binding.trackMe.setOnClickListener(view -> {
+           showMyLocation();
+       });
     }
 
     public void onResume() {
@@ -123,6 +141,31 @@ public class HomeFragment extends Fragment {
         super.onPause();
         if (binding.mapView != null)
             binding.mapView.onPause();
+    }
+
+
+    private void showMyLocation() {
+        binding.mapView.getOverlays().clear();
+        Marker startMarker = new Marker(binding.mapView);
+        GeoPoint startPoint = new GeoPoint(latitude, longitude);
+        startMarker.setPosition(startPoint);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        binding.mapView.getOverlays().add(startMarker);
+        binding.mapView.invalidate();
+
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses != null && addresses.size() > 0) {
+                Address address = addresses.get(0);
+                addressText = address.getAddressLine(0);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        LocationModel locationModel = new LocationModel(latitude, longitude, addressText);
+        firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Location").push().setValue(locationModel).addOnCompleteListener(task -> {});
     }
 
     private void startLocationUpdates() {
