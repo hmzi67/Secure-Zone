@@ -92,7 +92,7 @@
             android:foregroundGravity="center"
             android:tint="#00000000"
             app:fabCustomSize="40dp"
-            app:maxImageSize="60dp"
+            app:maxImageSize="80dp"
             app:tint="#00000000"
             android:backgroundTint="#00000000"
             android:tintMode="screen"
