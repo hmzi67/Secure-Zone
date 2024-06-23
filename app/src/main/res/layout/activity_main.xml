@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="AI Assistant"
-            android:src="@drawable/ic_assistant"
+            android:src="@drawable/ic_sos_png"
             app:layout_anchor="@id/bottomAppBar"
             android:layout_gravity="center"
             android:foregroundGravity="center"
@@ -91,10 +91,28 @@
             app:fabCustomSize="40dp"
             app:maxImageSize="60dp"
             app:tint="#00000000"
+            android:backgroundTint="#00000000"
+            android:tintMode="screen"
+            android:id="@+id/sos"
+            app:layout_anchorGravity="center"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="AI Assistant"
+            android:src="@drawable/ic_assistant"
+            app:layout_anchor="@id/bottomAppBar"
+            android:layout_gravity="end"
+            android:tint="#00000000"
+            app:fabCustomSize="40dp"
+            app:maxImageSize="60dp"
+            app:tint="#00000000"
             android:tintMode="screen"
             android:id="@+id/fab"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="80dp"
-            app:layout_anchorGravity="center"
+            app:layout_anchorGravity="end"
              />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

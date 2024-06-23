@@ -134,11 +134,13 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new AddContactFragment());
             else if (itemId == R.id.bottom_navigation_google)
                 replaceFragment(new SecurityGestureFragment());
-            else if (itemId == R.id.bottom_navigation_SOS)
-                replaceFragment(new SosFragment());
+
 
 
             return true;
+        });
+        binding.sos.setOnClickListener(view -> {
+            replaceFragment(new SosFragment());
         });
 
         navigationView.setNavigationItemSelectedListener(item -> {
