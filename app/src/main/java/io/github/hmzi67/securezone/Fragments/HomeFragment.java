@@ -30,6 +30,7 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.List;
@@ -81,8 +82,14 @@ public class HomeFragment extends Fragment {
                 GeoPoint startPoint = new GeoPoint(latitude, longitude);
                 mapController.setCenter(startPoint);
 
-                // Handle your location here
-                //Toast.makeText(requireContext(), "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_SHORT).show();
+                binding.mapView.getOverlays().clear();
+                // Add new marker for current location
+                Marker startMarker = new Marker(binding.mapView);
+                startMarker.setPosition(startPoint);
+                startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                binding.mapView.getOverlays().add(startMarker);
+                binding.mapView.invalidate();
+
             }
 
             @Override
@@ -121,13 +128,6 @@ public class HomeFragment extends Fragment {
     private void startLocationUpdates() {
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
@@ -150,9 +150,6 @@ public class HomeFragment extends Fragment {
                 startLocationUpdates();
                 return true;
             } else {
-                // Permission already granted
-                // Perform your operation related to location
-
                 return false;
             }
         } else {
@@ -165,7 +162,6 @@ public class HomeFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d("TAG", "Permission: " + permissions[0] + "was " + grantResults[0]);
-            //resume tasks needing this permission
         }
     }
 }
