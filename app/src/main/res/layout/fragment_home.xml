@@ -12,7 +12,6 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
-        android:layout_marginBottom="70dp"
         >
     </org.osmdroid.views.MapView>
 
@@ -33,15 +32,15 @@
         android:id="@+id/trackMe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="60dp"
         android:clickable="true"
         android:src="@drawable/ic_track_me"
         app:backgroundTint="@color/primary_Color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:tint="#00000000"
-        app:fabCustomSize="60dp"
-        app:maxImageSize="58dp"
+        app:fabCustomSize="105dp"
+        app:maxImageSize="110dp"
         android:backgroundTint="#00000000"
         app:tint="#00000000"
         android:tintMode="screen"

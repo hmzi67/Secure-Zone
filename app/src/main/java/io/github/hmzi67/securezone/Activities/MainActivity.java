@@ -135,8 +135,6 @@ public class MainActivity extends AppCompatActivity {
             else if (itemId == R.id.bottom_navigation_google)
                 replaceFragment(new SecurityGestureFragment());
 
-
-
             return true;
         });
         binding.sos.setOnClickListener(view -> {

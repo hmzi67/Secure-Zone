@@ -7,9 +7,9 @@
     tools:context=".Fragments.SecurityGestureFragment">
 
     <ScrollView
+        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="80dp">
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_marginHorizontal="20dp"
             android:orientation="vertical"
