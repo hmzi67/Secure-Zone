@@ -1,14 +1,20 @@
 package io.github.hmzi67.securezone.Fragments;
 
 import static androidx.core.content.ContextCompat.checkSelfPermission;
+import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationRequest;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -25,11 +31,16 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import java.util.List;
+
 import io.github.hmzi67.securezone.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private IMapController mapController;
+
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     public HomeFragment() {}
 
@@ -55,13 +66,40 @@ public class HomeFragment extends Fragment {
         binding.mapView.setMultiTouchControls(true);
         mapController = binding.mapView.getController();
         mapController.setZoom(15);
-        GeoPoint startPoint = new GeoPoint(51496994, -134733);
-        mapController.setCenter(startPoint);
 
-        MyLocationNewOverlay myLocationOverlay = new MyLocationNewOverlay(binding.mapView);
-        myLocationOverlay.enableMyLocation();
-        binding.mapView.getOverlays().add(myLocationOverlay);
-        binding.mapView.invalidate();
+
+//        MyLocationNewOverlay myLocationOverlay = new MyLocationNewOverlay(binding.mapView);
+//        myLocationOverlay.enableMyLocation();
+//        binding.mapView.getOverlays().add(myLocationOverlay);
+//        binding.mapView.invalidate();
+
+
+        //locationManager = getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+
+                GeoPoint startPoint = new GeoPoint(latitude, longitude);
+                mapController.setCenter(startPoint);
+
+                // Handle your location here
+//                Toast.makeText(requireContext(), "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            @Override
+            public void onProviderEnabled(String provider) {}
+
+            @Override
+            public void onProviderDisabled(String provider) {}
+        };
+
     }
 
     public void onResume() {
