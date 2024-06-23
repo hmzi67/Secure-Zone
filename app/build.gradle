@@ -60,4 +60,7 @@ dependencies {
     implementation "com.hbb20:ccp:2.6.0"
 
     implementation 'com.google.android.gms:play-services-auth:21.2.0'
+
+    implementation 'org.osmdroid:osmdroid-android:6.1.2'
+//    implementation 'com.github.MKergall:osmbonuspack:6.4'
 }
