@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -42,7 +43,8 @@ public class HomeFragment extends Fragment {
     private LocationManager locationManager;
     private LocationListener locationListener;
 
-    public HomeFragment() {}
+    public HomeFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +58,7 @@ public class HomeFragment extends Fragment {
         Configuration.getInstance().load(getContext(), PreferenceManager.getDefaultSharedPreferences(getContext()));
 
         if (Build.VERSION.SDK_INT >= 23) {
-            if (isStoragePermissionGranted()){
+            if (isStoragePermissionGranted()) {
 
             }
         }
@@ -66,13 +68,6 @@ public class HomeFragment extends Fragment {
         binding.mapView.setMultiTouchControls(true);
         mapController = binding.mapView.getController();
         mapController.setZoom(15);
-
-
-//        MyLocationNewOverlay myLocationOverlay = new MyLocationNewOverlay(binding.mapView);
-//        myLocationOverlay.enableMyLocation();
-//        binding.mapView.getOverlays().add(myLocationOverlay);
-//        binding.mapView.invalidate();
-
 
         //locationManager = getSystemService(Context.LOCATION_SERVICE);
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -87,19 +82,28 @@ public class HomeFragment extends Fragment {
                 mapController.setCenter(startPoint);
 
                 // Handle your location here
-//                Toast.makeText(requireContext(), "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(requireContext(), "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
 
             @Override
-            public void onProviderEnabled(String provider) {}
+            public void onProviderEnabled(String provider) {
+            }
 
             @Override
-            public void onProviderDisabled(String provider) {}
+            public void onProviderDisabled(String provider) {
+            }
         };
 
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        } else {
+            startLocationUpdates();
+        }
     }
 
     public void onResume() {
@@ -112,6 +116,21 @@ public class HomeFragment extends Fragment {
         super.onPause();
         if (binding.mapView != null)
             binding.mapView.onPause();
+    }
+
+    private void startLocationUpdates() {
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
     private boolean isStoragePermissionGranted() {
@@ -128,6 +147,7 @@ public class HomeFragment extends Fragment {
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         1);
 
+                startLocationUpdates();
                 return true;
             } else {
                 // Permission already granted
