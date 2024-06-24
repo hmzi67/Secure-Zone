@@ -13,21 +13,7 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
-        >
-    </org.osmdroid.views.MapView>
-
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:contentDescription="track me"-->
-<!--        android:src="@drawable/ic_track_me"-->
-<!--        app:layout_anchor="@id/bottomAppBar"-->
-<!--        app:maxImageSize="40dp"-->
-<!--        android:layout_gravity="center |bottom"-->
-<!--        android:id="@+id/fab"-->
-<!--        android:layout_marginBottom="120dp"-->
-<!--        app:layout_anchorGravity="center"-->
-<!--        />-->
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/trackMe"
