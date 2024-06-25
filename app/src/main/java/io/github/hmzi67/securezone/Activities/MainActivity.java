@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                             new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             1);
                 } else {
-                    // Permissions already granted, proceed with your code
+
                     startIntent();
                 }
             }
@@ -118,7 +118,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
             // Use the videoUri to do something (e.g., display it in a VideoView)
         } else {
-            // Video capture failed or was canceled by the user
+            pref = getSharedPreferences("Settings", MODE_PRIVATE);
+            if (pref.getBoolean("VC", false)) {
+                startIntent();
+            } else {
+                Toast.makeText(this, "Video capturing is off by default", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
