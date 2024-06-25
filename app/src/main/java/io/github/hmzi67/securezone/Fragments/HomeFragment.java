@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -36,11 +37,14 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.hmzi67.securezone.Modals.LocationModel;
+import io.github.hmzi67.securezone.Widgets.MyAlertDialog;
+import io.github.hmzi67.securezone.Widgets.TrafficService;
 import io.github.hmzi67.securezone.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private IMapController mapController;
+    private TrafficService trafficService;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -61,6 +65,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         init();
+
         return binding.getRoot();
     }
 
@@ -68,7 +73,7 @@ public class HomeFragment extends Fragment {
         // Ready the firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-
+        trafficService = new TrafficService(getContext());
         Configuration.getInstance().load(getContext(), PreferenceManager.getDefaultSharedPreferences(getContext()));
 
         if (Build.VERSION.SDK_INT >= 23) {
@@ -93,6 +98,7 @@ public class HomeFragment extends Fragment {
 //                double longitude = location.getLongitude();
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
+
 
                 GeoPoint startPoint = new GeoPoint(latitude, longitude);
                 mapController.setCenter(startPoint);
@@ -121,6 +127,7 @@ public class HomeFragment extends Fragment {
            showMyLocation();
        });
     }
+
 
     public void onResume() {
         super.onResume();
@@ -164,7 +171,37 @@ public class HomeFragment extends Fragment {
                 editor.apply(); // Apply changes asynchronously
             }
         });
-    }
+
+        trafficService.getTrafficInfo(latitude, longitude, new TrafficService.TrafficResponseListener() {
+            @Override
+            public void onResponse(TrafficService.TrafficData trafficData) {
+                // Handle traffic data here
+                // Example: Update UI with traffic information
+
+                if (trafficData.results != null && trafficData.results.length > 0) {
+                    TrafficService.TrafficData.Result result = trafficData.results[0];
+                    double jamFactor = result.currentFlow.jamFactor;
+                    Toast.makeText(getContext(), "HEllo:  "+ jamFactor, Toast.LENGTH_SHORT).show();
+                    Log.d("TAG", "onResponse: "+result.currentFlow.freeFlow);
+                    if (jamFactor < 0.5) {
+                        MyAlertDialog.showAlertDialog(getContext(), "Alert", "You are in danger zone. You are not in a safe place. Please get out of here.\n"
+                                + "Jam Factor: " + jamFactor + "\n"
+                                + "Free Flow: " + result.currentFlow.freeFlow + "\n"
+                                + "Location: " + addressText + "\n"
+                                + "Here Location" + result.location.description
+                        );
+                    }
+                }
+
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                // Handle error here
+                Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+}
 
     private void startLocationUpdates() {
 
