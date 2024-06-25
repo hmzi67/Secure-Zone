@@ -241,20 +241,28 @@ public class MainActivity extends AppCompatActivity {
             return true; // Consume the event
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             Toast.makeText(MainActivity.this, "Volume Up Button Pressed", Toast.LENGTH_SHORT).show();
-            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        200);
-            } else {
-                if (!isRecording) {
-                    Toast.makeText(MainActivity.this, "Recording started", Toast.LENGTH_SHORT).show();
-                    startRecording();
+
+            pref = getSharedPreferences("Settings", MODE_PRIVATE);
+            if (pref.getBoolean("AR", false)) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            200);
                 } else {
-                    Toast.makeText(MainActivity.this, "Recording stopped", Toast.LENGTH_SHORT).show();
-                    stopRecording();
+                    if (!isRecording) {
+                        Toast.makeText(MainActivity.this, "Recording started", Toast.LENGTH_SHORT).show();
+                        startRecording();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Recording stopped", Toast.LENGTH_SHORT).show();
+                        stopRecording();
+                    }
                 }
+            } else {
+                Toast.makeText(MainActivity.this, "Audio Recording is off by default", Toast.LENGTH_SHORT).show();
             }
+
+
             return true; // Consume the event
         }
         return super.onKeyDown(keyCode, event);
