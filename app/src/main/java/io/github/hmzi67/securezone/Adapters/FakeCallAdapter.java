@@ -61,6 +61,7 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
         // call goes here.
         holder.container.setOnClickListener(view -> {
             Intent intent = new Intent(context, InCommingCallActivity.class);
+            intent.putExtra("userphoto", fakeCalls.get(position).getCallImage());
             intent.putExtra("username", fakeCalls.get(position).getCallName());
             intent.putExtra("usernumber", fakeCalls.get(position).getCallNumber());
             context.startActivity(intent);
