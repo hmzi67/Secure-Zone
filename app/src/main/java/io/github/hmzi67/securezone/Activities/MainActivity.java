@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
         try (FileOutputStream out = new FileOutputStream(imageFile)) {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            Toast.makeText(this, "Image saved successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Image saved successfully"+ storageDir, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "Error saving image", Toast.LENGTH_SHORT).show();
@@ -265,8 +265,15 @@ public class MainActivity extends AppCompatActivity {
                 ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
     private void startRecording() {
+
         if (checkPermissions()) {
-            String outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.3gp";
+//            String outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.3gp";
+            String outputFile = getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/recording_" + System.currentTimeMillis() + ".3gp";
+
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_MUSIC);
+            if (storageDir != null && !storageDir.exists()) {
+                storageDir.mkdirs();
+            }
 
             mediaRecorder = new MediaRecorder();
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
