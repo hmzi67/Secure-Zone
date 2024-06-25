@@ -16,6 +16,13 @@
         android:layout_marginTop="80dp"
         android:orientation="vertical">
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userImg"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_logo"/>
+
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
@@ -27,6 +34,17 @@
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/userPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="+92 333 444 5555"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/callType"
