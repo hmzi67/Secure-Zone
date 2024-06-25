@@ -107,7 +107,13 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startIntent();
+                // startIntent();
+                pref = getSharedPreferences("Settings", MODE_PRIVATE);
+                if (pref.getBoolean("VC", false)) {
+                    startIntent();
+                } else {
+                    Toast.makeText(MainActivity.this, "Video capturing is off by default", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 // Permission denied, handle accordingly (e.g., show a message to the user)
                 Toast.makeText(this, "Permissions Denied", Toast.LENGTH_SHORT).show();
@@ -166,19 +172,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    private void saveImageToStorage(Bitmap bitmap) {
-//        String fileName = "image_" + System.currentTimeMillis() + ".jpg";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File imageFile = new File(storageDir, fileName);
-//
-//        try (FileOutputStream out = new FileOutputStream(imageFile)) {
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-//            // Image saved successfully to storage
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            // Error saving image
-//        }
-//    }
     private void saveImageToStorage(Bitmap bitmap) {
         String fileName = "image_" + System.currentTimeMillis() + ".jpg";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -228,16 +221,23 @@ public class MainActivity extends AppCompatActivity {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             // Volume down button is pressed
             Toast.makeText(MainActivity.this, "Volume Down Button Pressed", Toast.LENGTH_SHORT).show();
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
-                    != PackageManager.PERMISSION_GRANTED) {
-                // Permission not granted, request it
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.CAMERA},
-                        1001);
+
+            pref = getSharedPreferences("Settings", MODE_PRIVATE);
+            if (pref.getBoolean("IC", false)) {
+                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    // Permission not granted, request it
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{android.Manifest.permission.CAMERA},
+                            1001);
+                } else {
+                    // Permission already granted, proceed with camera operations
+                    startImageCapture();
+                }
             } else {
-                // Permission already granted, proceed with camera operations
-                startImageCapture();
+                Toast.makeText(MainActivity.this, "Image capturing is off by default", Toast.LENGTH_SHORT).show();
             }
+
             return true; // Consume the event
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             Toast.makeText(MainActivity.this, "Volume Up Button Pressed", Toast.LENGTH_SHORT).show();
