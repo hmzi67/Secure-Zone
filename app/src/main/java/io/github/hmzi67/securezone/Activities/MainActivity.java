@@ -166,18 +166,39 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+//    private void saveImageToStorage(Bitmap bitmap) {
+//        String fileName = "image_" + System.currentTimeMillis() + ".jpg";
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File imageFile = new File(storageDir, fileName);
+//
+//        try (FileOutputStream out = new FileOutputStream(imageFile)) {
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//            // Image saved successfully to storage
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            // Error saving image
+//        }
+//    }
     private void saveImageToStorage(Bitmap bitmap) {
         String fileName = "image_" + System.currentTimeMillis() + ".jpg";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (storageDir != null && !storageDir.exists()) {
+            storageDir.mkdirs();
+        }
         File imageFile = new File(storageDir, fileName);
 
         try (FileOutputStream out = new FileOutputStream(imageFile)) {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            // Image saved successfully to storage
+            Toast.makeText(this, "Image saved successfully", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
-            // Error saving image
+            Toast.makeText(this, "Error saving image", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void startImageCapture() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 22);
     }
 
     @Override
@@ -215,8 +236,7 @@ public class MainActivity extends AppCompatActivity {
                         1001);
             } else {
                 // Permission already granted, proceed with camera operations
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 1);
+                startImageCapture();
             }
             return true; // Consume the event
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
