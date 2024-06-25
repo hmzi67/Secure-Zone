@@ -143,20 +143,26 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (requestCode == 22 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri filePath = data.getData();
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
 
             // Save the image bitmap to a file or another storage location
-            saveImageToStorage(imageBitmap);
+            saveImageToStorage(bitmap);
+//            Uri filePath = data.getData();
+//            Bundle extras = data.getExtras();
+//            Bitmap imageBitmap = (Bitmap) extras.get("data");
+//
+//            // Save the image bitmap to a file or another storage location
+//            saveImageToStorage(imageBitmap);
         }
 
         if (requestCode == 22 && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+//            Bundle extras = data.getExtras();
+//            Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
 
             // Save the image bitmap to a file or another storage location
-            saveImageToStorage(imageBitmap);
+            saveImageToStorage(bitmap);
         }
     }
 

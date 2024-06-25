@@ -120,26 +120,6 @@ public class HomeFragment extends Fragment {
        binding.trackMe.setOnClickListener(view -> {
            showMyLocation();
        });
-
-       // showOthersLocations
-//       binding.showOthersLocations.setOnClickListener(view -> {
-//           firebaseDatabase.getReference().child("Users").child("ENdLvhP6TwQnJrH8eqN0OweuOgp1").child("Location").addValueEventListener(new ValueEventListener() {
-//               @Override
-//               public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                   if (snapshot.exists()) {
-//                       for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                           LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
-//                           latitude = locationModel.getLatitude();
-//                           longitude = locationModel.getLongitude();
-//                           showMyLocation();
-//                       }
-//                   }
-//               }
-//
-//               @Override
-//               public void onCancelled(@NonNull DatabaseError error) {}
-//           });
-//       });
     }
 
     public void onResume() {
