@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import io.github.hmzi67.securezone.R;
+import io.github.hmzi67.securezone.Widgets.MyAlertDialog;
 import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 import io.github.hmzi67.securezone.databinding.ActivitySettingsBinding;
 

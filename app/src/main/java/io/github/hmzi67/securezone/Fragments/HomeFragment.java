@@ -45,9 +45,10 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private IMapController mapController;
     private TrafficService trafficService;
-
+    private SharedPreferences pref;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private boolean isLiveAlert = false;
 
     double latitude;
     double longitude;
@@ -183,7 +184,8 @@ public class HomeFragment extends Fragment {
                     double jamFactor = result.currentFlow.jamFactor;
                     Toast.makeText(getContext(), "HEllo:  "+ jamFactor, Toast.LENGTH_SHORT).show();
                     Log.d("TAG", "onResponse: "+result.currentFlow.freeFlow);
-                    if (jamFactor < 0.5) {
+                    pref = getContext().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+                    if (jamFactor < 0.5 && pref.getBoolean("LA", false)) {
                         MyAlertDialog.showAlertDialog(getContext(), "Alert", "You are in danger zone. You are not in a safe place. Please get out of here.\n"
                                 + "Jam Factor: " + jamFactor + "\n"
                                 + "Free Flow: " + result.currentFlow.freeFlow + "\n"
