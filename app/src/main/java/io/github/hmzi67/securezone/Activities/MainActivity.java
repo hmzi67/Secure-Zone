@@ -9,10 +9,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +44,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.github.hmzi67.securezone.Fragments.AddContactFragment;
@@ -58,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
+
+    private boolean isRecording = false;
+    private MediaRecorder mediaRecorder;
 
     private SensorManager mSensorManager;
     private float mAccel; // acceleration apart from gravity
@@ -84,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
                             new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             1);
                 } else {
-
                     startIntent();
                 }
             }
@@ -100,11 +105,19 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, start video capture intent
                 startIntent();
             } else {
                 // Permission denied, handle accordingly (e.g., show a message to the user)
                 Toast.makeText(this, "Permissions Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (requestCode == 200) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+               startRecording();
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Permissions denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -115,14 +128,14 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 101 && resultCode == RESULT_OK) {
             // Video recorded successfully, you can do something with the saved video URI
             Uri videoUri = data.getData();
-            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
             // Use the videoUri to do something (e.g., display it in a VideoView)
         } else {
             pref = getSharedPreferences("Settings", MODE_PRIVATE);
             if (pref.getBoolean("VC", false)) {
                 startIntent();
             } else {
-                Toast.makeText(this, "Video capturing is off by default", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Video capturing is off by default", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -148,6 +161,68 @@ public class MainActivity extends AppCompatActivity {
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
         binding.fab.setVisibility(pref.getBoolean("AI", false) ? View.VISIBLE : View.GONE);
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            // Volume down button is pressed
+            Toast.makeText(MainActivity.this, "Volume Down Button Pressed", Toast.LENGTH_SHORT).show();
+            return true; // Consume the event
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Toast.makeText(MainActivity.this, "Volume Up Button Pressed", Toast.LENGTH_SHORT).show();
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        200);
+            } else {
+                if (!isRecording) {
+                    Toast.makeText(MainActivity.this, "Recording started", Toast.LENGTH_SHORT).show();
+                    startRecording();
+                } else {
+                    Toast.makeText(MainActivity.this, "Recording stopped", Toast.LENGTH_SHORT).show();
+                    stopRecording();
+                }
+            }
+            return true; // Consume the event
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private boolean checkPermissions() {
+        return ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+    private void startRecording() {
+        if (checkPermissions()) {
+            String outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.3gp";
+
+            mediaRecorder = new MediaRecorder();
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mediaRecorder.setOutputFile(outputFile);
+
+            try {
+                mediaRecorder.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            mediaRecorder.start();
+            isRecording = true;
+        }
+    }
+
+    private void stopRecording() {
+        if (isRecording) {
+            mediaRecorder.stop();
+            mediaRecorder.release();
+            mediaRecorder = null;
+            isRecording = false;
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,6 +366,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isRecording) {
+            stopRecording();
+        }
+    }
 }
 
