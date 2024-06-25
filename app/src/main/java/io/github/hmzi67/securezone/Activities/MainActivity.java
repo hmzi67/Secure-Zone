@@ -130,17 +130,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void startIntent() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-        // Specify where to save video file
-        File videoFile = new File(Environment.getExternalStorageDirectory(), "video.mp4");
-        Uri videoUri = FileProvider.getUriForFile(MainActivity.this, "io.github.hmzi67.securezone.fileprovider", videoFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-
-        // Optionally, limit video quality and duration
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1); // 0 for low quality, 1 for high quality
-        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 30); // 30 seconds max duration
-
-        // Start the activity for result
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 30);
         startActivityForResult(intent, 101);
     }
 
