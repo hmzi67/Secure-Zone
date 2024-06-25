@@ -249,7 +249,7 @@
                     android:id="@+id/updateSettings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Delete Account"
+                    android:text="Update Profile"
                     android:textColor="@color/black"
                     android:textAllCaps="false"
                     android:background="@drawable/bg_btn"

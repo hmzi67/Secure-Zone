@@ -64,8 +64,10 @@ public class SosFragment extends Fragment {
                 binding.time.setVisibility(View.GONE);
                 binding.icon.setImageResource(R.drawable.ic_check);
                 binding.icon.setVisibility(View.VISIBLE);
-                binding.successStatus.setVisibility(View.VISIBLE);
+                // binding.successStatus.setVisibility(View.VISIBLE);
                 countDownTimer = null;
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage("+923277978954", null, "9090999999   ", null, null);
             }
         }.start();
 

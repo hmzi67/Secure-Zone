@@ -29,7 +29,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -41,6 +44,7 @@ import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -128,6 +132,26 @@ public class HomeFragment extends Fragment {
         // on track me
        binding.trackMe.setOnClickListener(view -> {
            showMyLocation();
+       });
+
+       // showOthersLocations
+       binding.showOthersLocations.setOnClickListener(view -> {
+           firebaseDatabase.getReference().child("Users").child("ENdLvhP6TwQnJrH8eqN0OweuOgp1").child("Location").addValueEventListener(new ValueEventListener() {
+               @Override
+               public void onDataChange(@NonNull DataSnapshot snapshot) {
+                   if (snapshot.exists()) {
+                       for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                           LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
+                           latitude = locationModel.getLatitude();
+                           longitude = locationModel.getLongitude();
+                           showMyLocation();
+                       }
+                   }
+               }
+
+               @Override
+               public void onCancelled(@NonNull DatabaseError error) {}
+           });
        });
     }
 
