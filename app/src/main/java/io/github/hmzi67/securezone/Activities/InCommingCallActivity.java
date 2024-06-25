@@ -1,5 +1,6 @@
 package io.github.hmzi67.securezone.Activities;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -9,18 +10,24 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import io.github.hmzi67.securezone.R;
+import io.github.hmzi67.securezone.databinding.ActivityInCommingCallBinding;
 
 public class InCommingCallActivity extends AppCompatActivity {
+    private ActivityInCommingCallBinding binding;
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_in_comming_call);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        binding = ActivityInCommingCallBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        init();
+    }
+
+    private void init() {
+        // ready the media player
+        mediaPlayer = MediaPlayer.create(this, R.raw.ringtone);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 }

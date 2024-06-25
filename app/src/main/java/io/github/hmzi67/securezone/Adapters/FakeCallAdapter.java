@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import io.github.hmzi67.securezone.Activities.EditContactActivity;
+import io.github.hmzi67.securezone.Activities.InCommingCallActivity;
 import io.github.hmzi67.securezone.Modals.FakeCallModel;
 import io.github.hmzi67.securezone.R;
 
@@ -57,7 +58,8 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
 
         // call goes here.
         holder.container.setOnClickListener(view -> {
-            Toast.makeText(context, "call started", Toast.LENGTH_SHORT).show();
+            context.startActivity(new Intent(context, InCommingCallActivity.class));
+            //Toast.makeText(context, "call started", Toast.LENGTH_SHORT).show();
         });
     }
 
