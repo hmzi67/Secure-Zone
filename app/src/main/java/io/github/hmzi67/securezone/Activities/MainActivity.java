@@ -1,13 +1,18 @@
 package io.github.hmzi67.securezone.Activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +22,9 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -32,6 +40,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.github.hmzi67.securezone.Fragments.AddContactFragment;
@@ -66,8 +76,17 @@ public class MainActivity extends AppCompatActivity {
             mAccel = mAccel * 0.9f + delta; // perform low-cut filter
 
             if (mAccel > 2) {
-                Toast toast2 = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG);
-                toast2.show();
+                Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG).show();
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            1);
+                } else {
+                    // Permissions already granted, proceed with your code
+                    startIntent();
+                }
             }
 
         }
@@ -77,11 +96,53 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, start video capture intent
+                startIntent();
+            } else {
+                // Permission denied, handle accordingly (e.g., show a message to the user)
+                Toast.makeText(this, "Permissions Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101 && resultCode == RESULT_OK) {
+            // Video recorded successfully, you can do something with the saved video URI
+            Uri videoUri = data.getData();
+            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+            // Use the videoUri to do something (e.g., display it in a VideoView)
+        } else {
+            // Video capture failed or was canceled by the user
+        }
+    }
+
+    @Override
     protected void onPause() {
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
     }
 
+    private void startIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        // Specify where to save video file
+        File videoFile = new File(Environment.getExternalStorageDirectory(), "video.mp4");
+        Uri videoUri = FileProvider.getUriForFile(MainActivity.this, "io.github.hmzi67.securezone.fileprovider", videoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+
+        // Optionally, limit video quality and duration
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1); // 0 for low quality, 1 for high quality
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 30); // 30 seconds max duration
+
+        // Start the activity for result
+        startActivityForResult(intent, 101);
+    }
 
     @Override
     protected void onResume() {
