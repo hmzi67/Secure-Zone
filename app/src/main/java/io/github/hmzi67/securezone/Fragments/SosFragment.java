@@ -1,5 +1,9 @@
 package io.github.hmzi67.securezone.Fragments;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -64,10 +68,25 @@ public class SosFragment extends Fragment {
                 binding.time.setVisibility(View.GONE);
                 binding.icon.setImageResource(R.drawable.ic_check);
                 binding.icon.setVisibility(View.VISIBLE);
+
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+                String address = sharedPreferences.getString("address", "");
+
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send. " + address);
+                sendIntent.setType("text/plain");
+                sendIntent.setPackage("com.whatsapp");
+
+                try {
+                    startActivity(sendIntent);
+                } catch (ActivityNotFoundException ex) {
+                    Toast.makeText(getContext(), "WhatsApp not installed.", Toast.LENGTH_SHORT).show();
+                }
+
                 // binding.successStatus.setVisibility(View.VISIBLE);
                 countDownTimer = null;
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage("+923277978954", null, "9090999999   ", null, null);
             }
         }.start();
 
