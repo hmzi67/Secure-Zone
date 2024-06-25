@@ -25,9 +25,31 @@ public class InCommingCallActivity extends AppCompatActivity {
     }
 
     private void init() {
+        // getting intent data
+        binding.name.setText(getIntent().getStringExtra("username"));
+
         // ready the media player
         mediaPlayer = MediaPlayer.create(this, R.raw.ringtone);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
+
+        // accept on click listener
+        binding.btnAnswer.setOnClickListener(view -> {
+            if (mediaPlayer.isPlaying())
+                mediaPlayer.stop();
+            else {
+                mediaPlayer = MediaPlayer.create(this, R.raw.ringtone);
+                mediaPlayer.setLooping(true);
+                mediaPlayer.start();
+            }
+
+        });
+
+        // decline on click listener
+        binding.btnDecline.setOnClickListener(view -> {
+            mediaPlayer.stop();
+            onBackPressed();
+
+        });
     }
 }

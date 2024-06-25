@@ -1,7 +1,9 @@
 package io.github.hmzi67.securezone.Activities;
 
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import androidx.activity.EdgeToEdge;
@@ -19,6 +21,7 @@ public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
 
+    MediaPlayer mediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,11 +37,22 @@ public class SettingsActivity extends AppCompatActivity {
         // setting up the local storage settings.
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
 
+        // ready the media player
+        mediaPlayer = MediaPlayer.create(SettingsActivity.this, R.raw.alarm);
+        mediaPlayer.setLooping(true);
+
         // Updating the settings
         binding.videoCapturing.setOnClickListener(view -> updateSettings("VC", binding.videoCapturing.isChecked()));
         binding.imageCapturing.setOnClickListener(view -> updateSettings("IC", binding.imageCapturing.isChecked()));
         binding.liveAlert.setOnClickListener(view -> updateSettings("LA", binding.liveAlert.isChecked()));
-        binding.noisySound.setOnClickListener(view -> updateSettings("NS", binding.noisySound.isChecked()));
+        binding.noisySound.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                mediaPlayer.start();
+            } else {
+                mediaPlayer.pause();
+            }
+        });
+
         binding.audioRecording.setOnClickListener(view -> updateSettings("AR", binding.audioRecording.isChecked()));
         binding.aiAssistance.setOnClickListener(view -> updateSettings("AI", binding.aiAssistance.isChecked()));
 
