@@ -99,7 +99,7 @@ public class AddContactFragment extends Fragment {
         progressStatus = new ProgressStatus(getContext());
         progressStatus.setTitle("Creating Contact");
 
-        if (!userName.isEmpty() && !userNumber.isEmpty()) {
+        if (!userName.isEmpty() && !userNumber.isEmpty() && !filePath.equals(null)) {
             progressStatus.show();
 
             StorageReference ref = storageReference.child("images/" + firebaseAuth.getCurrentUser().getUid() + "/" + userName);
@@ -116,8 +116,17 @@ public class AddContactFragment extends Fragment {
                     });
                 });
             });
-
-
+        } else if (!userName.isEmpty() && !userNumber.isEmpty()) {
+            progressStatus.show();
+            downloadURL = "";
+            FakeCallModel contact = new FakeCallModel("", downloadURL, userName, userNumber);
+            firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Contacts").push().setValue(contact).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    progressStatus.dismiss();
+                    Toast.makeText(getContext(), "Contact added successfully", Toast.LENGTH_SHORT).show();
+                    resetPage();
+                }
+            });
         } else {
             Toast.makeText(getContext(), "First fill the details", Toast.LENGTH_SHORT).show();
         }
