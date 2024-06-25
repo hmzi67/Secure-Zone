@@ -35,7 +35,7 @@ public class AddContactFragment extends Fragment {
     private StorageReference storageReference;
     private FirebaseStorage storage;
 
-    Uri filePath;
+    Uri filePath = null;
     private final int PICK_IMAGE_REQUEST = 22;
     String downloadURL;
     private ProgressStatus progressStatus;
@@ -99,7 +99,7 @@ public class AddContactFragment extends Fragment {
         progressStatus = new ProgressStatus(getContext());
         progressStatus.setTitle("Creating Contact");
 
-        if (!userName.isEmpty() && !userNumber.isEmpty() && !filePath.equals(null)) {
+        if (!userName.isEmpty() && !userNumber.isEmpty() && filePath != null) {
             progressStatus.show();
 
             StorageReference ref = storageReference.child("images/" + firebaseAuth.getCurrentUser().getUid() + "/" + userName);

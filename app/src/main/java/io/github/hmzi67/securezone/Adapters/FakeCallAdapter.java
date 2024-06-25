@@ -42,8 +42,10 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull FakeCallAdapter.ViewHolder holder, int position) {
-        if (holder.callImage != null)
-            Picasso.get().load(fakeCalls.get(position).getCallImage()).into(holder.callImage);
+        if (!fakeCalls.get(position).getCallImage().isEmpty())
+            Picasso.get().load(fakeCalls.get(position).getCallImage()).placeholder(R.drawable.ic_avatar_placeholder).into(holder.callImage);
+        else
+            Picasso.get().load(R.drawable.ic_avatar_placeholder).into(holder.callImage);
         holder.callName.setText(fakeCalls.get(position).getCallName());
         holder.callNumber.setText(fakeCalls.get(position).getCallNumber());
 
