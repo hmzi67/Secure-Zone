@@ -455,13 +455,17 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.setLooping(true);
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
 
-        binding.noisySound.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked && pref.getBoolean("NS", false)) {
-                mediaPlayer.start();
-            } else {
-                mediaPlayer.pause();
-            }
-        });
+
+            binding.noisySound.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (pref.getBoolean("NS", false)) {
+                    if (isChecked) {
+                        mediaPlayer.start();
+                    } else {
+                        mediaPlayer.pause();
+                    }
+                }
+            });
+
 
         // getting user image
         firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").addListenerForSingleValueEvent(new ValueEventListener() {
