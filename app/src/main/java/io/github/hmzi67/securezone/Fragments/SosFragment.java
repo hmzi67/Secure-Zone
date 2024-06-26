@@ -1,5 +1,6 @@
 package io.github.hmzi67.securezone.Fragments;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -61,6 +62,8 @@ public class SosFragment extends Fragment {
             }
         });
 
+
+
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -80,6 +83,16 @@ public class SosFragment extends Fragment {
             @Override
             public void onProviderDisabled(String provider) {}
         };
+
+        startLocationUpdates();
+    }
+
+    private void startLocationUpdates() {
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
     private void startCountdown() {
