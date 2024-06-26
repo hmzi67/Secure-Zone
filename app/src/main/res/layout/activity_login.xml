@@ -59,6 +59,7 @@
                 android:layout_marginHorizontal="20dp"
                 app:hintEnabled="false"
                 android:layout_marginTop="10dp"
+                app:boxStrokeWidthFocused="0dp"
                 android:orientation="horizontal">
 
                 <android.widget.EditText
@@ -87,6 +88,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
+                app:boxStrokeWidthFocused="0dp"
                 app:passwordToggleTint="#444444"
                 app:passwordToggleEnabled="true">
 

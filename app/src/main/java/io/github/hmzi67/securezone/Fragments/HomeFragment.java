@@ -182,7 +182,7 @@ public class HomeFragment extends Fragment {
                 if (trafficData.results != null && trafficData.results.length > 0) {
                     TrafficService.TrafficData.Result result = trafficData.results[0];
                     double jamFactor = result.currentFlow.jamFactor;
-                    Toast.makeText(getContext(), "HEllo:  "+ jamFactor, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Evaluating Traffic Stats...:  ", Toast.LENGTH_SHORT).show();
                     Log.d("TAG", "onResponse: "+result.currentFlow.freeFlow);
                     pref = getContext().getSharedPreferences("Settings", Context.MODE_PRIVATE);
                     if (jamFactor < 0.5 && pref.getBoolean("LA", false)) {

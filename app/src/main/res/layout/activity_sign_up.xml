@@ -100,6 +100,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     app:hintEnabled="false"
+                    app:boxStrokeWidthFocused="0dp"
                     android:layout_marginTop="8dp"
                     android:orientation="horizontal">
 
@@ -144,6 +145,7 @@
                     app:hintEnabled="false"
                     android:layout_marginTop="8dp"
                     android:orientation="horizontal"
+                    app:boxStrokeWidthFocused="0dp"
                     app:passwordToggleTint="#444444"
                     app:passwordToggleEnabled="true">
 
@@ -175,6 +177,7 @@
                     app:hintEnabled="false"
                     android:layout_marginTop="8dp"
                     android:orientation="horizontal"
+                    app:boxStrokeWidthFocused="0dp"
                     app:passwordToggleTint="#444444"
                     app:passwordToggleEnabled="true">
 
