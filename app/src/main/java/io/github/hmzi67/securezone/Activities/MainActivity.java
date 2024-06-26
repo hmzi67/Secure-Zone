@@ -83,19 +83,21 @@ public class MainActivity extends AppCompatActivity {
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta; // perform low-cut filter
 
-            if (mAccel > 2) {
-                Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG).show();
-                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-                        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            1);
-                } else {
-                    startIntent();
+            pref = getSharedPreferences("Settings", MODE_PRIVATE);
+            if (pref.getBoolean("VC", false)) {
+                if (mAccel > 6) {
+                    //Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG).show();
+                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(MainActivity.this,
+                                new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                1);
+                    } else {
+                        startIntent();
+                    }
                 }
             }
-
         }
 
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -114,19 +116,21 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(MainActivity.this, "Video capturing is off by default", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                // Permission denied, handle accordingly (e.g., show a message to the user)
-                Toast.makeText(this, "Permissions Denied", Toast.LENGTH_SHORT).show();
             }
+//            else {
+//                // Permission denied, handle accordingly (e.g., show a message to the user)
+//                Toast.makeText(this, "Permissions Denied", Toast.LENGTH_SHORT).show();
+//            }
         }
 
         if (requestCode == 200) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                startRecording();
-            } else {
-                // Permission denied
-                Toast.makeText(this, "Permissions denied", Toast.LENGTH_SHORT).show();
             }
+//            else {
+//                // Permission denied
+//                Toast.makeText(this, "Permissions denied", Toast.LENGTH_SHORT).show();
+//            }
         }
     }
 
@@ -138,14 +142,15 @@ public class MainActivity extends AppCompatActivity {
             Uri videoUri = data.getData();
             Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
             // Use the videoUri to do something (e.g., display it in a VideoView)
-        } else {
-            pref = getSharedPreferences("Settings", MODE_PRIVATE);
-            if (pref.getBoolean("VC", false)) {
-                startIntent();
-            } else {
-                Toast.makeText(MainActivity.this, "Video capturing is off by default", Toast.LENGTH_SHORT).show();
-            }
         }
+        //else {
+//            pref = getSharedPreferences("Settings", MODE_PRIVATE);
+//            if (pref.getBoolean("VC", false)) {
+//                startIntent();
+//            } else {
+//                Toast.makeText(MainActivity.this, "Video capturing is off by default", Toast.LENGTH_SHORT).show();
+//            }
+//        }
 
 
         if (requestCode == 22 && resultCode == RESULT_OK && data != null && data.getData() != null) {
@@ -220,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             // Volume down button is pressed
-            Toast.makeText(MainActivity.this, "Volume Down Button Pressed", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(MainActivity.this, "Volume Down Button Pressed", Toast.LENGTH_SHORT).show();
 
             pref = getSharedPreferences("Settings", MODE_PRIVATE);
             if (pref.getBoolean("IC", false)) {
@@ -240,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
 
             return true; // Consume the event
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            Toast.makeText(MainActivity.this, "Volume Up Button Pressed", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(MainActivity.this, "Volume Up Button Pressed", Toast.LENGTH_SHORT).show();
 
             pref = getSharedPreferences("Settings", MODE_PRIVATE);
             if (pref.getBoolean("AR", false)) {
