@@ -246,23 +246,29 @@ public class MainActivity extends AppCompatActivity {
             return true; // Consume the event
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
            // Toast.makeText(MainActivity.this, "Volume Up Button Pressed", Toast.LENGTH_SHORT).show();
-
             pref = getSharedPreferences("Settings", MODE_PRIVATE);
             if (pref.getBoolean("AR", false)) {
-                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-                        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            200);
+                if (!isRecording) {
+                    Toast.makeText(MainActivity.this, "Recording started", Toast.LENGTH_SHORT).show();
+                    startRecording();
                 } else {
-                    if (!isRecording) {
-                        Toast.makeText(MainActivity.this, "Recording started", Toast.LENGTH_SHORT).show();
-                        startRecording();
-                    } else {
-                        Toast.makeText(MainActivity.this, "Recording stopped", Toast.LENGTH_SHORT).show();
-                        stopRecording();
-                    }
+                    Toast.makeText(MainActivity.this, "Recording stopped", Toast.LENGTH_SHORT).show();
+                    stopRecording();
                 }
+//                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+//                        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(MainActivity.this,
+//                            new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                            200);
+//                } else {
+//                    if (!isRecording) {
+//                        Toast.makeText(MainActivity.this, "Recording started", Toast.LENGTH_SHORT).show();
+//                        startRecording();
+//                    } else {
+//                        Toast.makeText(MainActivity.this, "Recording stopped", Toast.LENGTH_SHORT).show();
+//                        stopRecording();
+//                    }
+//                }
             } else {
                 Toast.makeText(MainActivity.this, "Audio Recording is off by default", Toast.LENGTH_SHORT).show();
             }
@@ -279,30 +285,52 @@ public class MainActivity extends AppCompatActivity {
     }
     private void startRecording() {
 
-        if (checkPermissions()) {
-//            String outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.3gp";
-            String outputFile = getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/recording_" + System.currentTimeMillis() + ".3gp";
+        String outputFile = getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/recording_" + System.currentTimeMillis() + ".3gp";
 
-            File storageDir = getExternalFilesDir(Environment.DIRECTORY_MUSIC);
-            if (storageDir != null && !storageDir.exists()) {
-                storageDir.mkdirs();
-            }
-
-            mediaRecorder = new MediaRecorder();
-            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            mediaRecorder.setOutputFile(outputFile);
-
-            try {
-                mediaRecorder.prepare();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            mediaRecorder.start();
-            isRecording = true;
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_MUSIC);
+        if (storageDir != null && !storageDir.exists()) {
+            storageDir.mkdirs();
         }
+
+        mediaRecorder = new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mediaRecorder.setOutputFile(outputFile);
+
+        try {
+            mediaRecorder.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mediaRecorder.start();
+        isRecording = true;
+
+//        if (checkPermissions()) {
+////            String outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.3gp";
+////            String outputFile = getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/recording_" + System.currentTimeMillis() + ".3gp";
+////
+////            File storageDir = getExternalFilesDir(Environment.DIRECTORY_MUSIC);
+////            if (storageDir != null && !storageDir.exists()) {
+////                storageDir.mkdirs();
+////            }
+////
+////            mediaRecorder = new MediaRecorder();
+////            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+////            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+////            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+////            mediaRecorder.setOutputFile(outputFile);
+////
+////            try {
+////                mediaRecorder.prepare();
+////            } catch (IOException e) {
+////                e.printStackTrace();
+////            }
+////
+////            mediaRecorder.start();
+////            isRecording = true;
+//        }
     }
 
     private void stopRecording() {
