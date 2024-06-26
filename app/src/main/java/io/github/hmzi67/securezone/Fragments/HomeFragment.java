@@ -1,5 +1,7 @@
 package io.github.hmzi67.securezone.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -175,7 +177,7 @@ public class HomeFragment extends Fragment {
         LocationModel locationModel = new LocationModel(latitude, longitude, addressText);
         firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Location").push().setValue(locationModel).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPreferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("address", addressText);
                 editor.apply(); // Apply changes asynchronously
@@ -203,9 +205,10 @@ public class HomeFragment extends Fragment {
                                         JSONObject firstResult = resultsArray.getJSONObject(0);
                                         int confidence = firstResult.getInt("confidence");
                                         Log.d("TAG", "Confidence value: " + confidence);
-                                        if (confidence < 10) {
-                                            MyAlertDialog.showAlertDialog(getContext(), "Alert", "You are in danger zone. You are not in a safe place. Please get out of here.\n"
-                                                    + "Reliably: " + confidence + "\n"
+                                        pref = getActivity().getSharedPreferences("Settings", MODE_PRIVATE);
+                                        if (confidence < 5 && pref.getBoolean("LA", false)) {
+                                            MyAlertDialog.showAlertDialog(getContext(), "Alert", "You are in area where there is less safety. Please get out of here.\n"
+                                                    + "Reliably: " + (confidence * 10) + "%\n"
                                                     + "Location: " + addressText + "\n"
                                             );
                                         }
