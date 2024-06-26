@@ -22,7 +22,6 @@ public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
 
-    MediaPlayer mediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,20 +37,12 @@ public class SettingsActivity extends AppCompatActivity {
         // setting up the local storage settings.
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
 
-        // ready the media player
-        mediaPlayer = MediaPlayer.create(SettingsActivity.this, R.raw.alarm);
-        mediaPlayer.setLooping(true);
-
         // Updating the settings
         binding.videoCapturing.setOnClickListener(view -> updateSettings("VC", binding.videoCapturing.isChecked()));
         binding.imageCapturing.setOnClickListener(view -> updateSettings("IC", binding.imageCapturing.isChecked()));
         binding.liveAlert.setOnClickListener(view -> updateSettings("LA", binding.liveAlert.isChecked()));
-        binding.noisySound.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                mediaPlayer.start();
-            } else {
-                mediaPlayer.pause();
-            }
+        binding.noisySound.setOnClickListener(view -> {
+            updateSettings("NS", binding.noisySound.isChecked());
         });
 
         binding.audioRecording.setOnClickListener(view -> updateSettings("AR", binding.audioRecording.isChecked()));

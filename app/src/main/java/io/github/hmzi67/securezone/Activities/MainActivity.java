@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
-
+    private SharedPreferences prefs;
     private boolean isRecording = false;
     private MediaRecorder mediaRecorder;
     MediaPlayer mediaPlayer;
@@ -453,9 +453,10 @@ public class MainActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.alarm);
         mediaPlayer.setLooping(true);
+        pref = getSharedPreferences("Settings", MODE_PRIVATE);
 
         binding.noisySound.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
+            if (isChecked && pref.getBoolean("NS", false)) {
                 mediaPlayer.start();
             } else {
                 mediaPlayer.pause();
