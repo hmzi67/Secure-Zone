@@ -10,6 +10,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isRecording = false;
     private MediaRecorder mediaRecorder;
-
+    MediaPlayer mediaPlayer;
     private SensorManager mSensorManager;
     private float mAccel; // acceleration apart from gravity
     private float mAccelCurrent; // current acceleration including gravity
@@ -450,6 +451,16 @@ public class MainActivity extends AppCompatActivity {
         // ready the firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.alarm);
+        mediaPlayer.setLooping(true);
+
+        binding.noisySound.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                mediaPlayer.start();
+            } else {
+                mediaPlayer.pause();
+            }
+        });
 
         // getting user image
         firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").addListenerForSingleValueEvent(new ValueEventListener() {

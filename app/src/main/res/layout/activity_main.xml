@@ -44,6 +44,15 @@
                     android:layout_height="wrap_content"/>
 
             </LinearLayout>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/noisySound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTint="@color/white"
+                android:layout_gravity="end"
+                android:layout_marginEnd="20dp"
+                android:textColor="@color/black" />
+
         </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
@@ -121,6 +130,7 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.navigation.NavigationView
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/nav_view"
