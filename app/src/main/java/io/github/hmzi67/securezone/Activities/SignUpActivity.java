@@ -1,7 +1,9 @@
 package io.github.hmzi67.securezone.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,15 +163,53 @@ public class SignUpActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // Get the Uri of data
             filePath = data.getData();
-            try {
-                // Setting image on image view using Bitmap
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                binding.changeAvatar.setImageBitmap(bitmap);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
+
+            long fileSize = getFileSize(filePath);
+            if (fileSize != -1 && fileSize <= (1024 * 1024)) {
+                try {
+                    // Setting image on image view using Bitmap
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                    binding.changeAvatar.setImageBitmap(bitmap);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Toast.makeText(this, "File size exceeds 1 MB limit", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private long getFileSize(Uri uri) {
+        // Resolve the file path from URI
+        String filePath = getPath(this, uri);
+        if (filePath != null) {
+            // Create File object from path
+            File file = new File(filePath);
+            // Return the file size in bytes
+            return file.length();
+        } else {
+            return -1;
+        }
+    }
+
+    public static String getPath(Context context, Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = null;
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                return cursor.getString(columnIndex);
+            }
+        } catch (Exception e) {
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
     }
 
     private void signUp() {
@@ -262,6 +303,24 @@ public class SignUpActivity extends AppCompatActivity {
             })).addOnFailureListener(e -> {
                 // Error, Image not uploaded
                 Toast.makeText(SignUpActivity.this,"Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            Users user = new Users(userName, userEmail, userPhone, "", "", "", "", "");
+            firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").setValue(user).addOnCompleteListener(task1 -> {
+                if (task1.isSuccessful()) {
+                    progressStatus.dismiss();
+                    firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(task2 -> {
+                        if (task2.isSuccessful()) {
+                            Toast.makeText(this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
+                }
             });
         }
     }

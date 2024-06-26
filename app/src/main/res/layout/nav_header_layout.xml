@@ -13,7 +13,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginVertical="20dp"
-        android:src="@drawable/ic_logo"/>
+        android:src="@drawable/ic_avatar_placeholder"/>
 
     <TextView
         android:id="@+id/userName"
