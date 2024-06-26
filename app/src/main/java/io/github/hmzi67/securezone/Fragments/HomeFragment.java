@@ -23,7 +23,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -49,13 +48,11 @@ import java.util.Locale;
 
 import io.github.hmzi67.securezone.Modals.LocationModel;
 import io.github.hmzi67.securezone.Widgets.MyAlertDialog;
-import io.github.hmzi67.securezone.Widgets.TrafficService;
 import io.github.hmzi67.securezone.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private IMapController mapController;
-    private TrafficService trafficService;
     private SharedPreferences pref;
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -85,7 +82,6 @@ public class HomeFragment extends Fragment {
         // Ready the firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        trafficService = new TrafficService(getContext());
         Configuration.getInstance().load(getContext(), PreferenceManager.getDefaultSharedPreferences(getContext()));
 
         if (Build.VERSION.SDK_INT >= 23) {
