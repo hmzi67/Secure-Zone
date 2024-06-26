@@ -23,9 +23,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -173,36 +182,52 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        trafficService.getTrafficInfo(latitude, longitude, new TrafficService.TrafficResponseListener() {
-            @Override
-            public void onResponse(TrafficService.TrafficData trafficData) {
-                // Handle traffic data here
-                // Example: Update UI with traffic information
+        // Build the API URL
+        String apiUrl = "https://api.opencagedata.com/geocode/v1/json?q=" +
+                latitude + "," + longitude + "&key=" + "226ee3b17c684ed095df16f25e2c7e19";
 
-                if (trafficData.results != null && trafficData.results.length > 0) {
-                    TrafficService.TrafficData.Result result = trafficData.results[0];
-                    double jamFactor = result.currentFlow.jamFactor;
-                    Toast.makeText(getContext(), "Evaluating Traffic Stats...:  ", Toast.LENGTH_SHORT).show();
-                    Log.d("TAG", "onResponse: "+result.currentFlow.freeFlow);
-                    pref = getContext().getSharedPreferences("Settings", Context.MODE_PRIVATE);
-                    if (jamFactor < 0.5 && pref.getBoolean("LA", false)) {
-                        MyAlertDialog.showAlertDialog(getContext(), "Alert", "You are in danger zone. You are not in a safe place. Please get out of here.\n"
-                                + "Jam Factor: " + jamFactor + "\n"
-                                + "Free Flow: " + result.currentFlow.freeFlow + "\n"
-                                + "Location: " + addressText + "\n"
-                                + "Here Location" + result.location.description
-                        );
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+
+        // Request a JSON response from the provided URL.
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, apiUrl, null,
+                        new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    // Get the confidence value
+                                    JSONArray resultsArray = response.getJSONArray("results");
+                                    if (resultsArray.length() > 0) {
+                                        JSONObject firstResult = resultsArray.getJSONObject(0);
+                                        int confidence = firstResult.getInt("confidence");
+                                        Log.d("TAG", "Confidence value: " + confidence);
+                                        if (confidence < 10) {
+                                            MyAlertDialog.showAlertDialog(getContext(), "Alert", "You are in danger zone. You are not in a safe place. Please get out of here.\n"
+                                                    + "Reliably: " + confidence + "\n"
+                                                    + "Location: " + addressText + "\n"
+                                            );
+                                        }
+                                        Log.d("TAG", "Confidence value: " + confidence);
+                                        // Update UI or perform further operations with confidence value
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error
+                        Log.e("TAG", "Error retrieving JSON response: " + error.toString());
                     }
-                }
+                });
 
-            }
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
 
-            @Override
-            public void onError(String errorMessage) {
-                // Handle error here
-                Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
 }
 
     private void startLocationUpdates() {
