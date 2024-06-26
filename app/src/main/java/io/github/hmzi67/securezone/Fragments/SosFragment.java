@@ -79,7 +79,7 @@ public class SosFragment extends Fragment {
                         "\n" +
                         "Emergency: [Briefly describe the nature of the emergency, e.g., medical, fire, stranded, etc.]\n" +
                         "Immediate assistance required: [Describe what kind of help is urgently needed]\n" +
-                        "Contact information: [Your contact number or any alternative means of communication]\n" +
+                        "Contact information: [Your contact number or any alternative means of communication]\n");
                 sendIntent.setType("text/plain");
                 sendIntent.setPackage("com.whatsapp");
 
