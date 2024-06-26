@@ -75,7 +75,11 @@ public class SosFragment extends Fragment {
 
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send. " + address);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Location: " + address +
+                        "\n" +
+                        "Emergency: [Briefly describe the nature of the emergency, e.g., medical, fire, stranded, etc.]\n" +
+                        "Immediate assistance required: [Describe what kind of help is urgently needed]\n" +
+                        "Contact information: [Your contact number or any alternative means of communication]\n" +
                 sendIntent.setType("text/plain");
                 sendIntent.setPackage("com.whatsapp");
 
