@@ -25,8 +25,17 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.osmdroid.util.GeoPoint;
 
+import java.util.ArrayList;
+
+import io.github.hmzi67.securezone.Modals.FakeCallModel;
 import io.github.hmzi67.securezone.R;
 import io.github.hmzi67.securezone.databinding.FragmentSosBinding;
 
@@ -40,9 +49,15 @@ public class SosFragment extends Fragment {
     double latitude;
     double longitude;
 
-    public SosFragment() {
-        // Required empty public constructor
-    }
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
+
+    private ArrayList contactNumbers;
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase firebaseDatabase;
+
+
+    public SosFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +68,27 @@ public class SosFragment extends Fragment {
     }
 
     private void init() {
+        // ready the firebase and contact numbers list.
+        contactNumbers = new ArrayList();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        // getting all contacts from the user.
+        firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("Contacts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    FakeCallModel fakeCallModel = dataSnapshot.getValue(FakeCallModel.class);
+                    String number = fakeCallModel.getCallNumber();
+                    contactNumbers.add(number);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+
+
         binding.helpNeeded.setOnClickListener(view -> {
             if (countDownTimer == null)
                 startCountdown();
@@ -112,26 +148,61 @@ public class SosFragment extends Fragment {
                 binding.icon.setImageResource(R.drawable.ic_check);
                 binding.icon.setVisibility(View.VISIBLE);
 
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
-                String address = sharedPreferences.getString("address", "");
+                sendSMS();
 
-
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Emergency: SOS! Need immediate assistance. My Location is " + "https://www.google.com/maps?q=" + latitude + "," + longitude +  ". Urgent help required.");
-                sendIntent.setType("text/plain");
-                sendIntent.setPackage("com.whatsapp");
-
-                try {
-                    startActivity(sendIntent);
-                } catch (ActivityNotFoundException ex) {
-                    Toast.makeText(getContext(), "WhatsApp not installed.", Toast.LENGTH_SHORT).show();
-                }
-
-                // binding.successStatus.setVisibility(View.VISIBLE);
                 countDownTimer = null;
             }
         }.start();
 
     }
+
+    private void sendSMS() {
+
+
+        // sending sms to all contacts.
+        for (int i = 0; i < contactNumbers.size(); i++) {
+            String phoneNumber = contactNumbers.get(i).toString(); // "03143288112";
+            String message = "Emergency: SOS! Need immediate assistance. My Location is " + "https://www.google.com/maps?q=" + latitude + "," + longitude +  ". Urgent help required.";
+
+            if (checkPermission()) {
+                try {
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+                    Toast.makeText(requireContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    Toast.makeText(requireContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            } else {
+                requestPermission();
+            }
+
+        }
+    }
+
+    private boolean checkPermission() {
+        return ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(requireActivity(),
+                new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_REQUEST_SEND_SMS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(requireContext(), "SMS permission granted", Toast.LENGTH_SHORT).show();
+                sendSMS();
+            } else {
+                Toast.makeText(requireContext(), "SMS permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 }
