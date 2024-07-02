@@ -69,8 +69,12 @@ public class EditContactActivity extends AppCompatActivity {
         // setting the data.
         binding.userName.setText(userName);
         binding.userPhoneNumber.setText(userNumber);
-        if (userPhoto != null)
+//        if (userPhoto != null)
+//            Picasso.get().load(userPhoto).into(binding.userAvatar);
+        if (!userPhoto.isEmpty())
             Picasso.get().load(userPhoto).into(binding.userAvatar);
+        else
+            Picasso.get().load(R.drawable.ic_avatar_placeholder).into(binding.userAvatar);
 
         // select image
         binding.userAvatar.setOnClickListener(view -> selectImage());

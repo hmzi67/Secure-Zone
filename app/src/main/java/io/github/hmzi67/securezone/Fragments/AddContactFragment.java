@@ -118,8 +118,7 @@ public class AddContactFragment extends Fragment {
             });
         } else if (!userName.isEmpty() && !userNumber.isEmpty()) {
             progressStatus.show();
-            downloadURL = "";
-            FakeCallModel contact = new FakeCallModel("", downloadURL, userName, userNumber);
+            FakeCallModel contact = new FakeCallModel("", "", userName, userNumber);
             firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Contacts").push().setValue(contact).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     progressStatus.dismiss();
