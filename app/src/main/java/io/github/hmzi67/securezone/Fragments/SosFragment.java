@@ -31,7 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 
@@ -162,7 +161,7 @@ public class SosFragment extends Fragment {
         // sending sms to all contacts.
         for (int i = 0; i < contactNumbers.size(); i++) {
             String phoneNumber = contactNumbers.get(i).toString(); // "03143288112";
-            String message = "Emergency: SOS! Need immediate assistance. My Location is " + "https://www.google.com/maps?q=" + latitude + "," + longitude +  ". Urgent help required.";
+            String message = "Emergency: SOS! \nNeed immediate assistance. My Location is " + "https://www.google.com/maps?q=" + latitude + "," + longitude +  ". Urgent help required.";
 
             if (checkPermission()) {
                 try {
