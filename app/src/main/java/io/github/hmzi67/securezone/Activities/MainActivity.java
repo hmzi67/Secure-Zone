@@ -405,7 +405,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         fab.setOnClickListener(view -> startActivity(new Intent(this, AIChatActivity.class)));
-
+        longPressGesture();
         init();
     }
 
@@ -420,16 +420,6 @@ public class MainActivity extends AppCompatActivity {
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
 
 
-        binding.noisySound.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (pref.getBoolean("NS", false)) {
-                if (isChecked) {
-                    mediaPlayer.start();
-                } else {
-                    mediaPlayer.pause();
-                }
-            }
-        });
-        longPressGesture();
 
         // getting user image
         firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").addListenerForSingleValueEvent(new ValueEventListener() {
