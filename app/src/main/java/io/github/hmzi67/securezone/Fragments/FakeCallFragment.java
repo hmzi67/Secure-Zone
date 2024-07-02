@@ -1,5 +1,6 @@
 package io.github.hmzi67.securezone.Fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -7,7 +8,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 import io.github.hmzi67.securezone.Adapters.FakeCallAdapter;
 import io.github.hmzi67.securezone.Modals.FakeCallModel;
 import io.github.hmzi67.securezone.R;
+import io.github.hmzi67.securezone.Widgets.CustomGestureListener;
 import io.github.hmzi67.securezone.databinding.FragmentFakeCallBinding;
 
 public class FakeCallFragment extends Fragment {
@@ -37,14 +41,18 @@ public class FakeCallFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // return inflater.inflate(R.layout.fragment_fake_call, container, false);
         binding = FragmentFakeCallBinding.inflate(inflater, container, false);
+
         init();
         return binding.getRoot();
     }
+
+
 
     private void init() {
         // initialize the database

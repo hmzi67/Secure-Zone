@@ -3,6 +3,7 @@ package io.github.hmzi67.securezone.Fragments;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,7 +21,9 @@ import androidx.fragment.app.Fragment;
 
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -47,6 +50,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.hmzi67.securezone.Modals.LocationModel;
+import io.github.hmzi67.securezone.Widgets.CustomGestureListener;
 import io.github.hmzi67.securezone.Widgets.MyAlertDialog;
 import io.github.hmzi67.securezone.databinding.FragmentHomeBinding;
 
@@ -69,6 +73,7 @@ public class HomeFragment extends Fragment {
     public HomeFragment() {
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -1,6 +1,7 @@
 package io.github.hmzi67.securezone.Activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +17,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +31,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -57,7 +59,7 @@ import io.github.hmzi67.securezone.Fragments.SecurityGestureFragment;
 import io.github.hmzi67.securezone.Fragments.SosFragment;
 import io.github.hmzi67.securezone.Modals.Users;
 import io.github.hmzi67.securezone.R;
-import io.github.hmzi67.securezone.Widgets.LShapeGestureView;
+import io.github.hmzi67.securezone.Widgets.CustomGestureListener;
 import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -65,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
-    private SharedPreferences prefs;
     private boolean isRecording = false;
     private MediaRecorder mediaRecorder;
     MediaPlayer mediaPlayer;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private float mAccel; // acceleration apart from gravity
     private float mAccelCurrent; // current acceleration including gravity
     private float mAccelLast; // last acceleration including gravity
+    private GestureDetector gestureDetector;
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
 
@@ -257,20 +259,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Recording stopped", Toast.LENGTH_SHORT).show();
                     stopRecording();
                 }
-//                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-//                        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(MainActivity.this,
-//                            new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-//                            200);
-//                } else {
-//                    if (!isRecording) {
-//                        Toast.makeText(MainActivity.this, "Recording started", Toast.LENGTH_SHORT).show();
-//                        startRecording();
-//                    } else {
-//                        Toast.makeText(MainActivity.this, "Recording stopped", Toast.LENGTH_SHORT).show();
-//                        stopRecording();
-//                    }
-//                }
             } else {
                 Toast.makeText(MainActivity.this, "Audio Recording is off by default", Toast.LENGTH_SHORT).show();
             }
@@ -308,31 +296,6 @@ public class MainActivity extends AppCompatActivity {
 
         mediaRecorder.start();
         isRecording = true;
-
-//        if (checkPermissions()) {
-////            String outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.3gp";
-////            String outputFile = getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/recording_" + System.currentTimeMillis() + ".3gp";
-////
-////            File storageDir = getExternalFilesDir(Environment.DIRECTORY_MUSIC);
-////            if (storageDir != null && !storageDir.exists()) {
-////                storageDir.mkdirs();
-////            }
-////
-////            mediaRecorder = new MediaRecorder();
-////            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-////            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-////            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-////            mediaRecorder.setOutputFile(outputFile);
-////
-////            try {
-////                mediaRecorder.prepare();
-////            } catch (IOException e) {
-////                e.printStackTrace();
-////            }
-////
-////            mediaRecorder.start();
-////            isRecording = true;
-//        }
     }
 
     private void stopRecording() {
@@ -344,7 +307,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -352,15 +314,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        LShapeGestureView gestureView = new LShapeGestureView(this);
-        setContentView(gestureView);
-
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
 
+        gestureDetector = new GestureDetector(this, new CustomGestureListener(this));
 
         BottomNavigationView bottomNavigationView = binding.bottomNavigationView;
         FloatingActionButton fab = binding.fab;
@@ -450,8 +410,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void init() {
+
         // ready the firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -460,16 +420,16 @@ public class MainActivity extends AppCompatActivity {
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
 
 
-            binding.noisySound.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (pref.getBoolean("NS", false)) {
-                    if (isChecked) {
-                        mediaPlayer.start();
-                    } else {
-                        mediaPlayer.pause();
-                    }
+        binding.noisySound.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (pref.getBoolean("NS", false)) {
+                if (isChecked) {
+                    mediaPlayer.start();
+                } else {
+                    mediaPlayer.pause();
                 }
-            });
-
+            }
+        });
+        longPressGesture();
 
         // getting user image
         firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -495,6 +455,17 @@ public class MainActivity extends AppCompatActivity {
 
         // Gesture code
 
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void longPressGesture() {
+        binding.mainLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                gestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
     }
 
     private void replaceFragment(Fragment fragment) {
