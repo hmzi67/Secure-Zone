@@ -52,7 +52,7 @@
                 android:layout_marginTop="10dp"
                 android:ems="10"
                 android:freezesText="true"
-                android:hint="030143288112"
+                android:hint="03143288112"
                 android:textColorHint="#444444"
                 android:inputType="phone"
                 android:padding="10dp"
