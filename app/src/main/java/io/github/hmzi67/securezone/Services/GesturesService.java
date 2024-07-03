@@ -43,7 +43,7 @@ public class GesturesService extends Service {
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Key Event Service")
                 .setContentText("Listening for key events")
-                .setSmallIcon(R.drawable.ic_add_person)
+                .setSmallIcon(R.drawable.ic_logo)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build();
 
