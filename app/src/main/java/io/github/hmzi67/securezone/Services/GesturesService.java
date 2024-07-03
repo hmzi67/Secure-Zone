@@ -5,12 +5,14 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.ServiceCompat;
 
 import io.github.hmzi67.securezone.R;
 
@@ -45,7 +47,8 @@ public class GesturesService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build();
 
-        startForeground(1, notification);
+//        ServiceCompat.startForeground(this,100, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION); //.startForegroundService(this, new Intent(this, GesturesService.class));
+         startForeground(1, notification);
     }
 
     @Override
