@@ -2,6 +2,7 @@ package io.github.hmzi67.securezone.Activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -318,6 +319,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent GesturesService = new Intent(this, GesturesService.class);
         ContextCompat.startForegroundService(this, GesturesService);
+        foregroundServiceRunning();
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
@@ -447,8 +449,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-
+    public boolean foregroundServiceRunning(){
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service: activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            if(GesturesService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SuppressLint("ClickableViewAccessibility")

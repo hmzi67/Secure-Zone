@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -14,13 +15,12 @@ import androidx.core.app.NotificationCompat;
 import io.github.hmzi67.securezone.R;
 
 public class GesturesService extends Service {
-    public static final String CHANNEL_ID = "KeyEventServiceChannel";
+    public static final String CHANNEL_ID = "GesturesService";
 
     @Override
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
-        createNotification();
     }
 
     private void createNotificationChannel() {
@@ -41,7 +41,7 @@ public class GesturesService extends Service {
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Key Event Service")
                 .setContentText("Listening for key events")
-                .setSmallIcon(R.drawable.ic_logo)
+                .setSmallIcon(R.drawable.ic_add_person)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build();
 
@@ -51,6 +51,23 @@ public class GesturesService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         createNotification();
+
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            Log.e("Service", "Service is running...");
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+        ).start();
+
         return START_STICKY;
     }
 
@@ -65,5 +82,6 @@ public class GesturesService extends Service {
         super.onDestroy();
         // Clean up any resources
     }
+
 }
 
