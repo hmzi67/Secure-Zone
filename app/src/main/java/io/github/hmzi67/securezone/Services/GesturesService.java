@@ -47,8 +47,7 @@ public class GesturesService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build();
 
-//        ServiceCompat.startForeground(this,100, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION); //.startForegroundService(this, new Intent(this, GesturesService.class));
-         startForeground(1, notification);
+        startForeground(1, notification);
     }
 
     @Override
@@ -85,6 +84,6 @@ public class GesturesService extends Service {
         super.onDestroy();
         // Clean up any resources
     }
-
 }
+
 

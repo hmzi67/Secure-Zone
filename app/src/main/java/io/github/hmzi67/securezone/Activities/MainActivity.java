@@ -142,6 +142,12 @@ public class MainActivity extends AppCompatActivity {
 //                Toast.makeText(this, "Permissions denied", Toast.LENGTH_SHORT).show();
 //            }
         }
+
+        if (requestCode == 23) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+            }
+        }
     }
 
     @Override
@@ -323,6 +329,12 @@ public class MainActivity extends AppCompatActivity {
         Intent GesturesService = new Intent(this, GesturesService.class);
         ContextCompat.startForegroundService(this, GesturesService);
         foregroundServiceRunning();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 23);
+            }
+        }
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
