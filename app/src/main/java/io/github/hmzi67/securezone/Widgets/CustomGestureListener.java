@@ -27,13 +27,15 @@ public class CustomGestureListener extends GestureDetector.SimpleOnGestureListen
 
     @Override
     public void onLongPress(MotionEvent e) {
-        if (isPlaying && pref.getBoolean("NS", false)) {
-            mediaPlayer.stop();
-            mediaPlayer.prepareAsync(); // Prepare the MediaPlayer again to allow for restarting if needed
-            isPlaying = false;
-        } else {
-            mediaPlayer.start();
-            isPlaying = true;
+        if (pref.getBoolean("NS", false)) {
+            if (isPlaying) {
+                mediaPlayer.stop();
+                mediaPlayer.prepareAsync(); // Prepare the MediaPlayer again to allow for restarting if needed
+                isPlaying = false;
+            } else {
+                mediaPlayer.start();
+                isPlaying = true;
+            }
         }
     }
 }
