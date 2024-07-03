@@ -60,6 +60,7 @@ import io.github.hmzi67.securezone.Fragments.SecurityGestureFragment;
 import io.github.hmzi67.securezone.Fragments.SosFragment;
 import io.github.hmzi67.securezone.Modals.Users;
 import io.github.hmzi67.securezone.R;
+import io.github.hmzi67.securezone.Services.GesturesService;
 import io.github.hmzi67.securezone.Widgets.CustomGestureListener;
 import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 
@@ -314,6 +315,9 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+        Intent GesturesService = new Intent(this, GesturesService.class);
+        ContextCompat.startForegroundService(this, GesturesService);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
