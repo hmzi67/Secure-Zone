@@ -444,20 +444,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Gesture code
 
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void longPressGesture() {
-//        binding.mainLayout.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                gestureDetector.onTouchEvent(event);
-//                return true;
-//            }
-//        });
-        binding.layout.setOnTouchListener(new View.OnTouchListener() {
+        binding.mainLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 gestureDetector.onTouchEvent(motionEvent);
