@@ -1,30 +1,46 @@
 package io.github.hmzi67.securezone.Services;
 
+import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ServiceInfo;
+import android.content.IntentFilter;
+import android.database.ContentObserver;
+import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.accessibility.AccessibilityEvent;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.ServiceCompat;
-import androidx.core.content.ContextCompat;
 
 import io.github.hmzi67.securezone.Activities.MainActivity;
 import io.github.hmzi67.securezone.R;
 
 public class GesturesService extends Service {
     public static final String CHANNEL_ID = "GesturesService";
+    private BroadcastReceiver volumeReceiver;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        volumeReceiver = new ButtonBroadCastReceiver();
+//        IntentFilter filter = new IntentFilter(Intent.ACTION_MEDIA_BUTTON);
+//        registerReceiver(volumeReceiver, filter);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.media.VOLUME_CHANGED_ACTION");
+        registerReceiver(volumeReceiver, filter);
         createNotificationChannel();
     }
 
@@ -106,8 +122,9 @@ public class GesturesService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Clean up any resources
+        unregisterReceiver(volumeReceiver);
+        if (volumeReceiver != null) {
+            unregisterReceiver(volumeReceiver);
+        }
     }
 }
-
-
