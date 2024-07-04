@@ -145,7 +145,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == 23) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted
+                Intent GesturesService = new Intent(this, GesturesService.class);
+                ContextCompat.startForegroundService(this, GesturesService);
+                foregroundServiceRunning();
             }
         }
     }
