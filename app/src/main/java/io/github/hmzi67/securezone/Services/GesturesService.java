@@ -17,11 +17,13 @@ import android.database.ContentObserver;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -36,11 +38,13 @@ import androidx.core.content.ContextCompat;
 
 import io.github.hmzi67.securezone.Activities.MainActivity;
 import io.github.hmzi67.securezone.R;
+import io.github.hmzi67.securezone.Widgets.CustomGestureListener;
 
 public class GesturesService extends Service {
     public static final String CHANNEL_ID = "GesturesService";
-    private BroadcastReceiver volumeReceiver;
+    private BroadcastReceiver volumeReceiver = new ButtonBroadCastReceiver();;
     private SharedPreferences pref;
+    private SensorManager mSensorManager;
     private float mAccel; // acceleration apart from gravity
     private float mAccelCurrent; // current acceleration including gravity
     private float mAccelLast; // last acceleration including gravity
@@ -72,10 +76,17 @@ public class GesturesService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        volumeReceiver = new ButtonBroadCastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.media.VOLUME_CHANGED_ACTION");
         registerReceiver(volumeReceiver, filter);
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        mAccel = 0.00f;
+        mAccelCurrent = SensorManager.GRAVITY_EARTH;
+        mAccelLast = SensorManager.GRAVITY_EARTH;
+
+
         createNotificationChannel();
     }
 
@@ -101,6 +112,7 @@ public class GesturesService extends Service {
 //        ContextCompat.startForegroundService(this, GesturesService);
 //        stopForeground(true);
 //        stopSelf();
+
 
         Intent stopIntent = new Intent(this, GesturesService.class);
         stopIntent.setAction("STOP_SERVICE");
@@ -129,21 +141,21 @@ public class GesturesService extends Service {
 
         createNotification();
 
-        new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        while (true) {
-                            Log.e("Service", "Service is running...");
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-        ).start();
+//        new Thread(
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        while (true) {
+//                            Log.e("Service", "Service is running...");
+//                            try {
+//                                Thread.sleep(2000);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                }
+//        ).start();
 
         return START_STICKY;
     }
