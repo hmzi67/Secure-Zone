@@ -1,5 +1,6 @@
 package io.github.hmzi67.securezone.Services;
 
+import android.Manifest;
 import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,7 +11,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -18,12 +24,15 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import io.github.hmzi67.securezone.Activities.MainActivity;
 import io.github.hmzi67.securezone.R;
@@ -31,13 +40,39 @@ import io.github.hmzi67.securezone.R;
 public class GesturesService extends Service {
     public static final String CHANNEL_ID = "GesturesService";
     private BroadcastReceiver volumeReceiver;
+    private SharedPreferences pref;
+    private float mAccel; // acceleration apart from gravity
+    private float mAccelCurrent; // current acceleration including gravity
+    private float mAccelLast; // last acceleration including gravity
+
+    private final SensorEventListener mSensorListener = new SensorEventListener() {
+
+        public void onSensorChanged(SensorEvent se) {
+            float x = se.values[0];
+            float y = se.values[1];
+            float z = se.values[2];
+            mAccelLast = mAccelCurrent;
+            mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
+            float delta = mAccelCurrent - mAccelLast;
+            mAccel = mAccel * 0.9f + delta; // perform low-cut filter
+
+            pref = getSharedPreferences("Settings", MODE_PRIVATE);
+            if (pref.getBoolean("VC", false)) {
+                if (mAccel > 6) {
+                    Toast.makeText(GesturesService.this, "Shakedetected", Toast.LENGTH_SHORT).show();
+                    // start camera view here
+                }
+            }
+        }
+
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+    };
 
     @Override
     public void onCreate() {
         super.onCreate();
         volumeReceiver = new ButtonBroadCastReceiver();
-//        IntentFilter filter = new IntentFilter(Intent.ACTION_MEDIA_BUTTON);
-//        registerReceiver(volumeReceiver, filter);
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.media.VOLUME_CHANGED_ACTION");
         registerReceiver(volumeReceiver, filter);
