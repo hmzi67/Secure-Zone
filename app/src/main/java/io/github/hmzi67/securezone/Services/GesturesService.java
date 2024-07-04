@@ -14,6 +14,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.ServiceCompat;
+import androidx.core.content.ContextCompat;
 
 import io.github.hmzi67.securezone.Activities.MainActivity;
 import io.github.hmzi67.securezone.R;
@@ -45,12 +46,23 @@ public class GesturesService extends Service {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
+//        Intent GesturesService = new Intent(this, GesturesService.class);
+//        ContextCompat.startForegroundService(this, GesturesService);
+//        stopForeground(true);
+//        stopSelf();
+
+        Intent stopIntent = new Intent(this, GesturesService.class);
+        stopIntent.setAction("STOP_SERVICE");
+        PendingIntent stopPendingIntent = PendingIntent.getService(this, 0, stopIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+
+
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Secure Zone")
                 .setContentText("Listening in foreground for gestures")
                 .setSmallIcon(R.drawable.ic_logo)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .addAction(R.drawable.btn_primary, "Open App", pendingIntent)
+                .addAction(R.drawable.btn_meetings, "Close App", stopPendingIntent)
                 .build();
 
         startForeground(1, notification);
@@ -58,6 +70,12 @@ public class GesturesService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null && "STOP_SERVICE".equals(intent.getAction())) {
+            stopForeground(true);
+            stopSelf();
+            return START_NOT_STICKY;
+        }
+
         createNotification();
 
         new Thread(
