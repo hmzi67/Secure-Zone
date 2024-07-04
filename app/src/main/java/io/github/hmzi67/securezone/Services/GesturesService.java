@@ -3,6 +3,7 @@ package io.github.hmzi67.securezone.Services;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.ServiceCompat;
 
+import io.github.hmzi67.securezone.Activities.MainActivity;
 import io.github.hmzi67.securezone.R;
 
 public class GesturesService extends Service {
@@ -40,11 +42,15 @@ public class GesturesService extends Service {
     }
 
     private void createNotification() {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Key Event Service")
-                .setContentText("Listening for key events")
+                .setContentTitle("Secure Zone")
+                .setContentText("Listening in foreground for gestures")
                 .setSmallIcon(R.drawable.ic_logo)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .addAction(R.drawable.btn_primary, "Open App", pendingIntent)
                 .build();
 
         startForeground(1, notification);
