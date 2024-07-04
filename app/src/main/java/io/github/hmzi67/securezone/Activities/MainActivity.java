@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Image capturing is off by default", Toast.LENGTH_SHORT).show();
             }
 
-            return true; // Consume the event
+            return false; // Consume the event
         } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
            // Toast.makeText(MainActivity.this, "Volume Up Button Pressed", Toast.LENGTH_SHORT).show();
             pref = getSharedPreferences("Settings", MODE_PRIVATE);
@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-            return true; // Consume the event
+            return false; // Consume the event
         }
         return super.onKeyDown(keyCode, event);
     }
