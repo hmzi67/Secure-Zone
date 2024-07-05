@@ -85,11 +85,9 @@ public class GesturesService extends Service {
             mAccel = mAccel * 0.9f + delta; // perform low-cut filter
 
             pref = getSharedPreferences("Settings", MODE_PRIVATE);
-            if (pref.getBoolean("VC", false)) {
-                if (mAccel > 6) {
-                    Toast.makeText(GesturesService.this, "Shakedetected", Toast.LENGTH_SHORT).show();
-                    sendSOS();
-                }
+            if (mAccel > 6) {
+                Toast.makeText(GesturesService.this, "Shakedetected", Toast.LENGTH_SHORT).show();
+                sendSOS();
             }
         }
 
