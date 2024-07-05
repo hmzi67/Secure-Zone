@@ -19,6 +19,7 @@ public class ButtonBroadCastReceiver extends BroadcastReceiver {
             if (volumeType == AudioManager.STREAM_MUSIC) {
                 if (newVolume > volumeDirection) {
                     // Volume up button pressed
+                    openCameraService(context);
                     Toast.makeText(context, "Volume up", Toast.LENGTH_SHORT).show();
                 } else if (newVolume < volumeDirection) {
                     // Volume down button pressed
@@ -26,5 +27,9 @@ public class ButtonBroadCastReceiver extends BroadcastReceiver {
                 }
             }
         }
+    }
+    private void openCameraService(Context context) {
+        Intent serviceIntent = new Intent(context, CameraService.class);
+        context.startService(serviceIntent);
     }
 }
