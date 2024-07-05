@@ -18,31 +18,55 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
 import io.github.hmzi67.securezone.Activities.MainActivity;
+import io.github.hmzi67.securezone.Modals.FakeCallModel;
 import io.github.hmzi67.securezone.R;
 import io.github.hmzi67.securezone.Widgets.CustomGestureListener;
 
 public class GesturesService extends Service {
     public static final String CHANNEL_ID = "GesturesService";
-    private BroadcastReceiver volumeReceiver = new ButtonBroadCastReceiver();;
+    private BroadcastReceiver volumeReceiver = new ButtonBroadCastReceiver();
+    FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
+    ArrayList contactNumbers;
+
+    double latitude;
+    double longitude;
+    LocationManager locationManager;
+    LocationListener locationListener;
+
     private SharedPreferences pref;
     private SensorManager mSensorManager;
     private float mAccel; // acceleration apart from gravity
@@ -56,7 +80,7 @@ public class GesturesService extends Service {
             float y = se.values[1];
             float z = se.values[2];
             mAccelLast = mAccelCurrent;
-            mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
+            mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta; // perform low-cut filter
 
@@ -64,10 +88,7 @@ public class GesturesService extends Service {
             if (pref.getBoolean("VC", false)) {
                 if (mAccel > 6) {
                     Toast.makeText(GesturesService.this, "Shakedetected", Toast.LENGTH_SHORT).show();
-                    // start camera view here
-                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    sendSOS();
                 }
             }
         }
@@ -76,9 +97,79 @@ public class GesturesService extends Service {
         }
     };
 
+    private void sendSOS() {
+
+
+        Toast.makeText(this, "Count : " + contactNumbers.size(), Toast.LENGTH_SHORT).show();
+
+        for (int i = 0; i < contactNumbers.size(); i++) {
+            String phoneNumber = contactNumbers.get(i).toString(); // "03143288112";
+            String message = "Emergency: SOS! \nNeed immediate assistance. My Location is " + "https://www.google.com/maps?q=" + latitude + "," + longitude +  ". Urgent help required.";
+//            String message = "Emergency: SOS! \nNeed immediate assistance. My Location is " + "https://www.google.com/maps?q=" + ". Urgent help required.";
+
+            try {
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+                Toast.makeText(this, "SMS sent.", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Toast.makeText(this, "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        contactNumbers = new ArrayList();
+        firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("Contacts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    FakeCallModel fakeCallModel = dataSnapshot.getValue(FakeCallModel.class);
+                    String number = fakeCallModel.getCallNumber();
+                    contactNumbers.add(number);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        locationManager = (LocationManager) getApplication().getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+
+
+
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.media.VOLUME_CHANGED_ACTION");
         registerReceiver(volumeReceiver, filter);
@@ -116,22 +207,15 @@ public class GesturesService extends Service {
         PendingIntent stopPendingIntent = PendingIntent.getService(this, 0, stopIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
         Intent videoCapturing = new Intent(this, CameraService.class);
-        videoCapturing.putExtra("Type", "video");
         PendingIntent videoCapturingIntent = PendingIntent.getActivity(this, 0, videoCapturing, PendingIntent.FLAG_IMMUTABLE);
-
-
-        Intent imageCapturing = new Intent(this, CameraService.class);
-        imageCapturing.putExtra("Type", "image");
-        PendingIntent imageCapturingIntent = PendingIntent.getActivity(this, 0, imageCapturing, PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Secure Zone")
-                .setContentText("Listening in foreground for gestures")
+                .setContentText("Listening!\nClick to Open App")
                 .setSmallIcon(R.drawable.ic_logo)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .addAction(R.drawable.btn_primary, "Video Capturing", videoCapturingIntent)
-                .addAction(R.drawable.btn_primary, "Image Capturing", imageCapturingIntent)
                 .addAction(R.drawable.btn_meetings, "Close App", stopPendingIntent)
                 .build();
 

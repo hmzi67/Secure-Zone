@@ -14,21 +14,10 @@ public class CameraService extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Toast.makeText(this, "Type : " + getIntent().getStringExtra("Type"), Toast.LENGTH_SHORT).show();
-
-        if (Objects.equals(getIntent().getStringExtra("Type"), "video")) {
-            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-        } else if(Objects.equals(getIntent().getStringExtra("Type"), "image")) {
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            cameraIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(cameraIntent);
-            finish();
-        }
-
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 }
 
