@@ -67,6 +67,9 @@
         <activity
             android:name=".Activities.LoginActivity"
             android:exported="false" />
+
+        <activity android:name=".Services.CameraService" android:exported="false" />
+
         <activity
             android:name=".Activities.IntroScreenActivity"
             android:exported="true">
@@ -83,9 +86,6 @@
 
         <service android:name=".Services.GesturesService"
             android:foregroundServiceType="mediaProjection" />
-
-        <service android:name=".Services.CameraService"
-            android:foregroundServiceType="camera" />
 
         <receiver
             android:name=".Services.GesturesBroadCastReceiver"

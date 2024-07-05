@@ -1,27 +1,32 @@
 package io.github.hmzi67.securezone.Services;
 
-import android.app.Service;
+import android.app.Activity;
 import android.content.Intent;
-import android.os.IBinder;
-import android.widget.Toast;
+import android.os.Bundle;
+import android.provider.MediaStore;
 
-import androidx.annotation.Nullable;
+public class CameraService extends Activity {
 
-public class CameraService extends Service {
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "Start Camera", Toast.LENGTH_SHORT).show();
-        Intent cameraIntent = new Intent("android.media.action.IMAGE_CAPTURE");
-        cameraIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(cameraIntent);
-        stopSelf(); // Stop the service once the camera intent is fired
-        return START_NOT_STICKY;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        String type = getIntent().getStringExtra("Type");
+
+        if (type == "video") {
+            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            cameraIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(cameraIntent);
+            finish();
+        }
+
     }
 }
+
+
 

@@ -111,23 +111,27 @@ public class GesturesService extends Service {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
-//        Intent GesturesService = new Intent(this, GesturesService.class);
-//        ContextCompat.startForegroundService(this, GesturesService);
-//        stopForeground(true);
-//        stopSelf();
-
-
         Intent stopIntent = new Intent(this, GesturesService.class);
         stopIntent.setAction("STOP_SERVICE");
         PendingIntent stopPendingIntent = PendingIntent.getService(this, 0, stopIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
+        Intent videoCapturing = new Intent(this, CameraService.class);
+        videoCapturing.putExtra("Type", "video");
+        PendingIntent videoCapturingIntent = PendingIntent.getActivity(this, 0, videoCapturing, PendingIntent.FLAG_IMMUTABLE);
+
+
+        Intent imageCapturing = new Intent(this, CameraService.class);
+        imageCapturing.putExtra("Type", "image");
+        PendingIntent imageCapturingIntent = PendingIntent.getActivity(this, 0, imageCapturing, PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Secure Zone")
                 .setContentText("Listening in foreground for gestures")
                 .setSmallIcon(R.drawable.ic_logo)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .addAction(R.drawable.btn_primary, "Open App", pendingIntent)
+                .setContentIntent(pendingIntent)
+                .addAction(R.drawable.btn_primary, "Video Capturing", videoCapturingIntent)
+                .addAction(R.drawable.btn_primary, "Image Capturing", imageCapturingIntent)
                 .addAction(R.drawable.btn_meetings, "Close App", stopPendingIntent)
                 .build();
 
