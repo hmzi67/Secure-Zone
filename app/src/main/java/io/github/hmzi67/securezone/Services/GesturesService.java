@@ -65,6 +65,9 @@ public class GesturesService extends Service {
                 if (mAccel > 6) {
                     Toast.makeText(GesturesService.this, "Shakedetected", Toast.LENGTH_SHORT).show();
                     // start camera view here
+                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
             }
         }
