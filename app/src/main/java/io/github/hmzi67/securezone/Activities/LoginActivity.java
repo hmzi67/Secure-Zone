@@ -58,16 +58,21 @@ public class LoginActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         // reset password
+
         binding.resetPassword.setOnClickListener(view -> {
             String email = binding.userEmail.getText().toString();
-            if(isValid(email)) {
+            if(email.isEmpty()) {
+                Toast.makeText(LoginActivity.this, "Please enter your email", Toast.LENGTH_SHORT).show();
+            }
+            else if(isValid(email)) {
                 firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
-                   if (task.isSuccessful()) Toast.makeText(LoginActivity.this, "Check your email for reset link", Toast.LENGTH_SHORT).show();
-                   else Toast.makeText(LoginActivity.this, "Some thing went wrong.", Toast.LENGTH_SHORT).show();
+                    if (task.isSuccessful()) Toast.makeText(LoginActivity.this, "Check your email for reset link", Toast.LENGTH_SHORT).show();
+                    else Toast.makeText(LoginActivity.this, "Some thing went wrong.", Toast.LENGTH_SHORT).show();
                 });
             } else {
                 Toast.makeText(LoginActivity.this, "Please Enter the valid email", Toast.LENGTH_SHORT).show();
             }
+
         });
 
         // ready the progress dialog
@@ -169,6 +174,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isValid(String email) {
-        return true; //email.matches(emailPattern);
+        if (email.matches(emailPattern))
+            return true; //email.matches(emailPattern);
+        return false;
     }
 }
