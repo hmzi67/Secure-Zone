@@ -1,10 +1,7 @@
 package io.github.hmzi67.securezone.Activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,11 +17,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,11 +60,12 @@ import io.github.hmzi67.securezone.Fragments.SosFragment;
 import io.github.hmzi67.securezone.Modals.Users;
 import io.github.hmzi67.securezone.R;
 import io.github.hmzi67.securezone.Services.GesturesService;
-import io.github.hmzi67.securezone.Widgets.CustomGestureListener;
 import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    private boolean isPlaying = false;
+
     private SharedPreferences pref;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
@@ -283,10 +279,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private boolean checkPermissions() {
-        return ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
+
     private void startRecording() {
 
         String outputFile = getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/recording_" + System.currentTimeMillis() + ".3gp";
@@ -344,7 +337,25 @@ public class MainActivity extends AppCompatActivity {
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
 
-        gestureDetector = new GestureDetector(this, new CustomGestureListener(this));
+        //gestureDetector = new GestureDetector(this, new CustomGestureListener(this));
+
+//        pref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+//        MediaPlayer.create(MainActivity.this, R.raw.alarm); // Replace with your actual audio file
+//
+//        binding.mainLayout.setOnLongClickListener(view -> {
+//            if (pref.getBoolean("NS", false)) {
+//                if (isPlaying) {
+//                    mediaPlayer.stop();
+//                    mediaPlayer.prepareAsync(); // Prepare the MediaPlayer again to allow for restarting if needed
+//                    isPlaying = false;
+//                } else {
+//                    mediaPlayer.start();
+//                    isPlaying = true;
+//                }
+//            }
+//            return false;
+//        });
+
 
         BottomNavigationView bottomNavigationView = binding.bottomNavigationView;
         FloatingActionButton fab = binding.fab;
@@ -478,16 +489,16 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void longPressGesture() {
-        binding.mainLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                gestureDetector.onTouchEvent(motionEvent);
-                return false;
-            }
-        });
-    }
+//    @SuppressLint("ClickableViewAccessibility")
+//    private void longPressGesture() {
+//        binding.mainLayout.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                gestureDetector.onTouchEvent(motionEvent);
+//                return false;
+//            }
+//        });
+//    }
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();

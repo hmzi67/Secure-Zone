@@ -212,6 +212,7 @@ public class GesturesService extends Service {
                 .setContentText("Listening!\nClick to Open App")
                 .setSmallIcon(R.drawable.ic_logo)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setOngoing(true)
                 .setContentIntent(pendingIntent)
                 .addAction(R.drawable.btn_primary, "Video Capturing", videoCapturingIntent)
                 .addAction(R.drawable.btn_meetings, "Close App", stopPendingIntent)
