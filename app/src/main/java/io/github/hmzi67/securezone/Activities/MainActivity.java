@@ -429,7 +429,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         fab.setOnClickListener(view -> startActivity(new Intent(this, AIChatActivity.class)));
-        longPressGesture();
+//        longPressGesture();
         init();
     }
 

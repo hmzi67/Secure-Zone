@@ -3,14 +3,27 @@ package io.github.hmzi67.securezone.Services;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
-import android.util.Log;
-import android.view.KeyEvent;
+import android.media.MediaPlayer;
 import android.widget.Toast;
 
+import io.github.hmzi67.securezone.R;
+
 public class ButtonBroadCastReceiver extends BroadcastReceiver {
+    private MediaPlayer mediaPlayer;
+    private SharedPreferences pref;
+    private boolean isPlaying = false;
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        // Initialize MediaPlayer only once
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(context, R.raw.alarm);
+            pref = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        }
+
+
         if (intent.getAction() != null && intent.getAction().equals("android.media.VOLUME_CHANGED_ACTION")) {
             int volumeType = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_TYPE", -1);
             int volumeDirection = intent.getIntExtra("android.media.EXTRA_PREV_VOLUME_STREAM_VALUE", -1);
@@ -23,11 +36,21 @@ public class ButtonBroadCastReceiver extends BroadcastReceiver {
                     Toast.makeText(context, "Volume up", Toast.LENGTH_SHORT).show();
                 } else if (newVolume < volumeDirection) {
                     // Volume down button pressed
-                    Toast.makeText(context, "Volume down", Toast.LENGTH_SHORT).show();
+                    if (pref.getBoolean("NS", false)) {
+                        if (isPlaying) {
+                            mediaPlayer.pause();
+                            isPlaying = false;
+                        } else {
+                            mediaPlayer.start();
+                            isPlaying = true;
+                        }
+                        Toast.makeText(context, "Volume down", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
     }
+
     private void openCameraService(Context context) {
         Intent serviceIntent = new Intent(context, CameraService.class);
         context.startService(serviceIntent);
