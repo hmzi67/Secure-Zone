@@ -4,15 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -44,6 +38,7 @@ public class IntroScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro_screen);
+
         // Firebase Database realtime sync enabled.
         if (Firebase.class == null) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
@@ -52,9 +47,10 @@ public class IntroScreenActivity extends AppCompatActivity {
 
         // when the activity is about to be launch we need to check id it's opened before or not
         if (restorePrefData() ) {
-            // ready the firebase
+            // ready the firebase services
             firebaseAuth = FirebaseAuth.getInstance();
 
+            // whether the user is login or not
             if (firebaseAuth.getCurrentUser() != null) {
                 Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(mainActivity);
@@ -66,12 +62,9 @@ public class IntroScreenActivity extends AppCompatActivity {
             }
         }
 
-        // tab init
         tabIndicator = findViewById(R.id.tab_indicator);
-        // btn init
         btnNext = findViewById(R.id.btn_next);
         btnGetStarted = findViewById(R.id.btn_get_started);
-//        btnAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_animation);
 
         // fill list screen
         List<ScreenItem> mList = new ArrayList<>();
@@ -88,19 +81,16 @@ public class IntroScreenActivity extends AppCompatActivity {
         tabIndicator.setupWithViewPager(screenPager);
 
         //next button click Listener
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                position = screenPager.getCurrentItem();
-                if(position < mList.size()){
-                    position++;
-                    screenPager.setCurrentItem(position);
-                }
-                //when we reach the last page
-                // will show get started button and hide all tab indicators
-                if(position == mList.size() -1){
-                    loadLastScreen();
-                }
+        btnNext.setOnClickListener(view -> {
+            position = screenPager.getCurrentItem();
+            if(position < mList.size()){
+                position++;
+                screenPager.setCurrentItem(position);
+            }
+            //when we reach the last page
+            // will show get started button and hide all tab indicators
+            if(position == mList.size() -1){
+                loadLastScreen();
             }
         });
 
@@ -114,23 +104,17 @@ public class IntroScreenActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
 
-        btnGetStarted.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(IntroScreenActivity.this, LoginActivity.class));
-                savePrefsData();
-                finish();
-            }
+        // get started button clicked
+        btnGetStarted.setOnClickListener(view -> {
+            startActivity(new Intent(IntroScreenActivity.this, LoginActivity.class));
+            savePrefsData();
+            finish();
         });
     }
 
@@ -152,8 +136,5 @@ public class IntroScreenActivity extends AppCompatActivity {
         btnNext.setVisibility(View.INVISIBLE);
         btnGetStarted.setVisibility(View.VISIBLE);
         tabIndicator.setVisibility(View.INVISIBLE);
-
-        // todo: add an animation to get started button
-        // setup animation
     }
 }
