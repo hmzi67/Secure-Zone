@@ -36,6 +36,7 @@ public class ButtonBroadCastReceiver extends BroadcastReceiver {
                     if (pref.getBoolean("NS", false)) {
                         if (isPlaying) {
                             mediaPlayer.pause();
+                            mediaPlayer.seekTo(0);
                             isPlaying = false;
                         } else {
                             mediaPlayer.start();
