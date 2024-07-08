@@ -2,7 +2,6 @@ package io.github.hmzi67.securezone.Activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,38 +10,26 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.github.hmzi67.securezone.Modals.Users;
 import io.github.hmzi67.securezone.R;
@@ -86,7 +73,7 @@ public class SignUpActivity extends AppCompatActivity {
         // go back
         binding.goBack.setOnClickListener(view -> onBackPressed());
 
-        // on signin link
+        // on sign in link
         binding.loginLink.setOnClickListener(view -> onBackPressed());
 
         // upload user profile image
@@ -101,6 +88,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    // continue with google
     private void continueGoogle() {
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.client_id))
@@ -112,6 +100,7 @@ public class SignUpActivity extends AppCompatActivity {
         activityResultLauncher.launch(intent);
     }
 
+    // activity result for continue with google.
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
@@ -155,7 +144,7 @@ public class SignUpActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent,"Select Image from here..."), PICK_IMAGE_REQUEST);
     }
 
-    // Override onActivityResult method
+    // Result method
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -165,6 +154,7 @@ public class SignUpActivity extends AppCompatActivity {
             filePath = data.getData();
 
             long fileSize = getFileSize(filePath);
+            // if file is less then 1MB
             if (fileSize != -1 && fileSize <= (1024 * 1024)) {
                 try {
                     // Setting image on image view using Bitmap
@@ -213,12 +203,14 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void signUp() {
+        // getting email, name, phone number, password and confirm password from user
         String userName = binding.username.getText().toString();
         String userEmail = binding.userEmail.getText().toString();
         String userPhoneNumber = binding.userPhone.getText().toString();
         String userPassword = binding.userPassword.getText().toString();
         String userPasswordConfirm = binding.userConfirmPassword.getText().toString();
 
+        // validating user data
         if (userName.isEmpty() || userEmail.isEmpty() || userPhoneNumber.isEmpty() || userPassword.isEmpty() || userPasswordConfirm.isEmpty()) {
             Toast.makeText(SignUpActivity.this, "Fill the form first.", Toast.LENGTH_SHORT).show();
         } else {
@@ -235,33 +227,10 @@ public class SignUpActivity extends AppCompatActivity {
                 progressStatus.setCanceledOnTouchOutside(false);
 
                 progressStatus.show();
-                // uploadImage();
 
                 firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(task -> {
                    if (task.isSuccessful()) {
                        uploadImage(userName, userEmail, userPhoneNumber);
-//                       SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
-//                       String profileImage = pref.getString("url", null);
-//                       Users user = new Users(userName, userEmail, userPhoneNumber, "", "", "", "", "");
-//                       user.setUserProfileImg(downloadURL);
-
-
-//                       firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").setValue(user).addOnCompleteListener(task1 -> {
-//                           if (task1.isSuccessful()) {
-//                               progressStatus.dismiss();
-//                               firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(task2 -> {
-//                                   if (task2.isSuccessful()) {
-//                                       Toast.makeText(this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
-//                                       startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-//                                       finish();
-//                                   } else {
-//                                       Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
-//                                   }
-//                               });
-//                           } else {
-//                               Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
-//                           }
-//                       });
                    }
                 });
 
@@ -271,6 +240,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    // uploading user image.
     private void uploadImage(String userName, String userEmail, String userPhone) {
         if (filePath != null) {
             StorageReference ref = storageReference.child("images/" + firebaseAuth.getCurrentUser().getUid().toString());
@@ -278,7 +248,6 @@ public class SignUpActivity extends AppCompatActivity {
             ref.putFile(filePath).addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
                 downloadURL = uri.toString();
 
-                Log.d("sdf", downloadURL);
                 Users user = new Users(userName, userEmail, userPhone, uri.toString(), "", "", "", "");
                 firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Profile").setValue(user).addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful()) {
@@ -296,10 +265,6 @@ public class SignUpActivity extends AppCompatActivity {
                         Toast.makeText(this, "Exception Occur", Toast.LENGTH_SHORT).show();
                     }
                 });
-//                SharedPreferences pref = getSharedPreferences("ProfileDetails", MODE_PRIVATE);
-//                SharedPreferences.Editor editor = pref.edit();
-//                editor.putString("url", uri.toString());
-//                editor.apply();
             })).addOnFailureListener(e -> {
                 // Error, Image not uploaded
                 Toast.makeText(SignUpActivity.this,"Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -325,6 +290,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    // validating the user email method.
     private boolean isValid(String email) {
         return email.matches(emailPattern);
     }
