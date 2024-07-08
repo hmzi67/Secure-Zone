@@ -1,8 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="CoarseFineLocation">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
 
     <application
         android:allowBackup="true"
@@ -15,6 +38,12 @@
         android:theme="@style/Theme.SecureZone"
         tools:targetApi="31">
         <activity
+            android:name=".Activities.InCommingCallActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.EditProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.AboutActivity"
             android:exported="false" />
         <activity
@@ -22,9 +51,6 @@
             android:exported="false" />
         <activity
             android:name=".Activities.AIChatActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.SecurityTipsActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.MainActivity"
@@ -38,6 +64,9 @@
         <activity
             android:name=".Activities.LoginActivity"
             android:exported="false" />
+
+        <activity android:name=".Services.CameraService" android:exported="false" />
+
         <activity
             android:name=".Activities.IntroScreenActivity"
             android:exported="true">
@@ -51,6 +80,26 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <service android:name=".Services.GesturesService"
+            android:foregroundServiceType="mediaProjection" />
+
+        <receiver
+            android:name=".Services.GesturesBroadCastReceiver"
+            android:exported="true"
+            tools:ignore="Instantiatable">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".Services.ButtonBroadCastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.VOLUME_CHANGED_ACTION" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

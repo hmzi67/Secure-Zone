@@ -7,6 +7,8 @@
     tools:context=".Fragments.AddContactFragment">
 
     <ScrollView
+        android:id="@+id/addContactFragment"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -52,7 +54,7 @@
                 android:layout_marginTop="10dp"
                 android:ems="10"
                 android:freezesText="true"
-                android:hint="Phone Number"
+                android:hint="03143288112"
                 android:textColorHint="#444444"
                 android:inputType="phone"
                 android:padding="10dp"

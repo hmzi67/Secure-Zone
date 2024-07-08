@@ -28,6 +28,7 @@ public class ProgressStatus {
     }
 
     private void init() {
+        // ready the dialog
         dialog = new Dialog(context);
         dialog.setContentView(R.layout.progress_status_layout);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -36,6 +37,7 @@ public class ProgressStatus {
     }
 
     private void findViews() {
+        // find views
         loadingIcon = (ImageView) dialog.findViewById(R.id.loadingIcon);
         loadingText = (TextView) dialog.findViewById(R.id.loadingText);
     }

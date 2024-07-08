@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:background="@color/bg_Color"
+    android:layout_height="match_parent"
+    tools:context=".Activities.EditProfileActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/bg_Color"
+        android:elevation="6dp">
+
+        <ImageView
+            android:id="@+id/goBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_next"
+            android:rotation="180"
+            />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:layout_gravity="center"
+            />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/changeAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/ic_avatar_placeholder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:layout_marginBottom="60dp"
+                android:orientation="vertical">
+
+                <android.widget.EditText
+                    android:id="@+id/firstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_message"
+                    android:drawableStart="@drawable/ic_user"
+                    android:drawablePadding="10dp"
+                    android:hint="First Name"
+                    android:inputType="textPersonName"
+                    android:padding="12dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#444444" />
+
+                <android.widget.EditText
+                    android:id="@+id/lastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_message"
+                    android:drawableStart="@drawable/ic_user"
+                    android:drawablePadding="10dp"
+                    android:hint="Last Name"
+                    android:inputType="textPersonName"
+                    android:padding="12dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#444444" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="20dp"
+                    android:text="Personal Details (Optional)"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/country_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_message"
+                    app:ccp_autoDetectCountry="true"
+                    app:ccp_defaultNameCode="PK"
+                    app:ccp_defaultLanguage="ENGLISH"
+                    app:ccp_showFlag="true"
+                    app:ccp_showFullName="true"
+                    app:ccp_showNameCode="true"
+                    app:ccp_showPhoneCode="false" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/dateOfBirth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_message"
+                    android:drawableEnd="@drawable/ic_next"
+                    android:padding="12dp"
+                    android:text="Date of Birth"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/selectGender"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="12dp"
+                    android:background="@drawable/bg_message"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:textSize="16sp"
+                    android:text="Gender"
+                    />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="What do you use SecureZone for ?"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+
+                    <!-- First Line: Two RadioButtons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        >
+
+                        <RadioButton
+                            android:id="@+id/workRadioButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_message"
+                            android:layout_marginEnd="5dp"
+                            android:button="@drawable/ic_work"
+                            android:padding="12dp"
+                            android:text="Work" />
+
+                        <RadioButton
+                            android:id="@+id/travelRadioButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="5dp"
+                            android:button="@drawable/ic_travel"
+                            android:padding="12dp"
+                            android:background="@drawable/bg_message"
+                            android:text="Travel" />
+
+                    </LinearLayout>
+
+                    <!-- Second Line: Two RadioButtons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+
+                        <RadioButton
+                            android:id="@+id/schoolRadioButton"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_message"
+                            android:layout_height="wrap_content"
+                            android:button="@drawable/ic_school"
+                            android:padding="12dp"
+                            android:layout_marginEnd="5dp"
+                            android:text="School" />
+
+                        <RadioButton
+                            android:id="@+id/familyRadioButton"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_message"
+                            android:layout_marginStart="5dp"
+                            android:button="@drawable/ic_family"
+                            android:padding="12dp"
+                            android:text="Family" />
+
+                    </LinearLayout>
+
+                    <!-- Third Line: One RadioButton -->
+                    <RadioButton
+                        android:id="@+id/peaceRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_message"
+                        android:layout_marginTop="10dp"
+                        android:button="@drawable/ic_peace"
+                        android:padding="12dp"
+                        android:text="Peace of Mind" />
+
+                </RadioGroup>
+
+                <android.widget.Button
+                    android:id="@+id/updateSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Update Profile"
+                    android:textColor="@color/black"
+                    android:textAllCaps="false"
+                    android:background="@drawable/bg_btn"
+                    android:paddingStart="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -7,9 +7,9 @@
     tools:context=".Fragments.SecurityGestureFragment">
 
     <ScrollView
+        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="80dp">
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_marginHorizontal="20dp"
             android:orientation="vertical"
@@ -30,6 +30,14 @@
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="If settings are on!\nPress Volume Down to start Image Capturing\nPress Volume Up to start Audio Recording\nShake your device to start Video Capturing"
+                    android:layout_marginStart="20dp"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
             </LinearLayout>
 
             <LinearLayout

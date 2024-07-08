@@ -2,8 +2,6 @@ package io.github.hmzi67.securezone.Modals;
 
 
 
-
-
 public class Users {
     private String userName;
     private String userEmail;
@@ -39,18 +37,6 @@ public class Users {
         return userEmail;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public String getUserPhone() {
-        return userPhone;
-    }
-
-    public void setUserPhone(String userPhone) {
-        this.userPhone = userPhone;
-    }
-
     public String getUserProfileImg() {
         return userProfileImg;
     }
@@ -59,32 +45,16 @@ public class Users {
         this.userProfileImg = userProfileImg;
     }
 
-    public String getUserCountry() {
-        return userCountry;
-    }
-
     public void setUserCountry(String userCountry) {
         this.userCountry = userCountry;
-    }
-
-    public String getUserDateOfBirth() {
-        return userDateOfBirth;
     }
 
     public void setUserDateOfBirth(String userDateOfBirth) {
         this.userDateOfBirth = userDateOfBirth;
     }
 
-    public String getUserGender() {
-        return userGender;
-    }
-
     public void setUserGender(String userGender) {
         this.userGender = userGender;
-    }
-
-    public String getUserPurposeOfUse() {
-        return userPurposeOfUse;
     }
 
     public void setUserPurposeOfUse(String userPurposeOfUse) {

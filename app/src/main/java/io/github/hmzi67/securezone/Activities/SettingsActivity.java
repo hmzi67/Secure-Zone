@@ -2,16 +2,9 @@ package io.github.hmzi67.securezone.Activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Switch;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import io.github.hmzi67.securezone.R;
-import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 import io.github.hmzi67.securezone.databinding.ActivitySettingsBinding;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -38,13 +31,17 @@ public class SettingsActivity extends AppCompatActivity {
         binding.videoCapturing.setOnClickListener(view -> updateSettings("VC", binding.videoCapturing.isChecked()));
         binding.imageCapturing.setOnClickListener(view -> updateSettings("IC", binding.imageCapturing.isChecked()));
         binding.liveAlert.setOnClickListener(view -> updateSettings("LA", binding.liveAlert.isChecked()));
-        binding.noisySound.setOnClickListener(view -> updateSettings("NS", binding.noisySound.isChecked()));
+        binding.noisySound.setOnClickListener(view -> {
+            updateSettings("NS", binding.noisySound.isChecked());
+        });
+
         binding.audioRecording.setOnClickListener(view -> updateSettings("AR", binding.audioRecording.isChecked()));
         binding.aiAssistance.setOnClickListener(view -> updateSettings("AI", binding.aiAssistance.isChecked()));
 
         updateUI();
     }
 
+    // update the settings toggle buttons on User Interface
     private void updateUI() {
         binding.videoCapturing.setChecked(pref.getBoolean("VC", false));
         binding.imageCapturing.setChecked(pref.getBoolean("IC", false));

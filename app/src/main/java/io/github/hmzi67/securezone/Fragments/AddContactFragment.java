@@ -2,25 +2,24 @@ package io.github.hmzi67.securezone.Fragments;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import io.github.hmzi67.securezone.Activities.SignUpActivity;
 import io.github.hmzi67.securezone.Modals.FakeCallModel;
 import io.github.hmzi67.securezone.R;
 import io.github.hmzi67.securezone.Widgets.ProgressStatus;
@@ -35,7 +34,7 @@ public class AddContactFragment extends Fragment {
     private StorageReference storageReference;
     private FirebaseStorage storage;
 
-    Uri filePath;
+    Uri filePath = null;
     private final int PICK_IMAGE_REQUEST = 22;
     String downloadURL;
     private ProgressStatus progressStatus;
@@ -43,11 +42,13 @@ public class AddContactFragment extends Fragment {
 
     public AddContactFragment() {}
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAddContactBinding.inflate(inflater, container, false);
         init();
+
         return binding.getRoot();
     }
 
@@ -68,7 +69,6 @@ public class AddContactFragment extends Fragment {
 
 
     private void selectImage() {
-        // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -80,7 +80,6 @@ public class AddContactFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            // Get the Uri of data
             filePath = data.getData();
             try {
                 // Setting image on image view using Bitmap
@@ -94,12 +93,15 @@ public class AddContactFragment extends Fragment {
     }
 
     private void saveContact() {
+        // getting user name and phone number
         String userName = binding.userName.getText().toString();
         String userNumber = binding.userPhoneNumber.getText().toString();
+
+        // showing progress dialog
         progressStatus = new ProgressStatus(getContext());
         progressStatus.setTitle("Creating Contact");
 
-        if (!userName.isEmpty() && !userNumber.isEmpty()) {
+        if (!userName.isEmpty() && !userNumber.isEmpty() && filePath != null) {
             progressStatus.show();
 
             StorageReference ref = storageReference.child("images/" + firebaseAuth.getCurrentUser().getUid() + "/" + userName);
@@ -116,14 +118,23 @@ public class AddContactFragment extends Fragment {
                     });
                 });
             });
-
-
+        } else if (!userName.isEmpty() && !userNumber.isEmpty()) {
+            progressStatus.show();
+            FakeCallModel contact = new FakeCallModel("", "", userName, userNumber);
+            firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Contacts").push().setValue(contact).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    progressStatus.dismiss();
+                    Toast.makeText(getContext(), "Contact added successfully", Toast.LENGTH_SHORT).show();
+                    resetPage();
+                }
+            });
         } else {
             Toast.makeText(getContext(), "First fill the details", Toast.LENGTH_SHORT).show();
         }
 
     }
 
+    // reset the page fields
     private void resetPage() {
         binding.userName.setText("");
         binding.userPhoneNumber.setText("");

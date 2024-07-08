@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -18,6 +17,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import io.github.hmzi67.securezone.Activities.EditContactActivity;
+import io.github.hmzi67.securezone.Activities.InCommingCallActivity;
 import io.github.hmzi67.securezone.Modals.FakeCallModel;
 import io.github.hmzi67.securezone.R;
 
@@ -41,8 +41,10 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull FakeCallAdapter.ViewHolder holder, int position) {
-        if (holder.callImage != null)
-            Picasso.get().load(fakeCalls.get(position).getCallImage()).into(holder.callImage);
+        if (!fakeCalls.get(position).getCallImage().isEmpty())
+            Picasso.get().load(fakeCalls.get(position).getCallImage()).placeholder(R.drawable.ic_avatar_placeholder).into(holder.callImage);
+        else
+            Picasso.get().load(R.drawable.ic_avatar_placeholder).into(holder.callImage);
         holder.callName.setText(fakeCalls.get(position).getCallName());
         holder.callNumber.setText(fakeCalls.get(position).getCallNumber());
 
@@ -55,9 +57,12 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
             context.startActivity(editContact);
         });
 
-        // call goes here.
         holder.container.setOnClickListener(view -> {
-            Toast.makeText(context, "call started", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, InCommingCallActivity.class);
+            intent.putExtra("userphoto", fakeCalls.get(position).getCallImage());
+            intent.putExtra("username", fakeCalls.get(position).getCallName());
+            intent.putExtra("usernumber", fakeCalls.get(position).getCallNumber());
+            context.startActivity(intent);
         });
     }
 
@@ -75,7 +80,6 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // finding views
             container = itemView.findViewById(R.id.container);
             callImage = itemView.findViewById(R.id.callImage);
             callName = itemView.findViewById(R.id.callName);

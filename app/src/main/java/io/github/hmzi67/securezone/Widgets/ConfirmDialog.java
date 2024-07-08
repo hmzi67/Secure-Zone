@@ -25,10 +25,10 @@ public class ConfirmDialog {
         this.context = context;
         init();
         findView();
-//        setDrawable();
     }
 
     private void init() {
+        // setting up dialog
         dialog = new Dialog(context);
         dialog.setContentView(R.layout.confirm_dialog_layout);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -37,6 +37,7 @@ public class ConfirmDialog {
     }
 
     private void findView() {
+        // finding views
         dialog_logo = (ImageView) dialog.findViewById(R.id.dialog_logo);
         dialog_headline = (TextView) dialog.findViewById(R.id.dialog_headline);
         dialog_body = (TextView) dialog.findViewById(R.id.dialog_body);
@@ -44,10 +45,7 @@ public class ConfirmDialog {
         no_btn = (Button) dialog.findViewById(R.id.no_btn);
     }
 
-//    public void setDrawable() {
-//        dialog_logo.setImageResource(dialog_type.getValue());
-//    }
-
+    // getter and setter methods
     public void setDialog_headline(String headline) {
         dialog_headline.setText(headline);
     }

@@ -7,11 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -69,33 +65,32 @@ public class EditContactActivity extends AppCompatActivity {
         // setting the data.
         binding.userName.setText(userName);
         binding.userPhoneNumber.setText(userNumber);
-        if (userPhoto != null)
+        if (!userPhoto.isEmpty())
             Picasso.get().load(userPhoto).into(binding.userAvatar);
-
+        else
+            Picasso.get().load(R.drawable.ic_avatar_placeholder).into(binding.userAvatar);
         // select image
         binding.userAvatar.setOnClickListener(view -> selectImage());
-
         // update contact
         binding.saveContact.setOnClickListener(view -> updateContact());
-        
         // delete contact
         binding.deleteContact.setOnClickListener(view -> deleteContact());
     }
 
+    // set the contact image
     private void selectImage() {
-        // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Select Image from here..."), PICK_IMAGE_REQUEST);
     }
 
+    // on activity result
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            // Get the Uri of data
             filePath = data.getData();
             try {
                 // Setting image on image view using Bitmap
@@ -108,6 +103,7 @@ public class EditContactActivity extends AppCompatActivity {
         }
     }
 
+    // on contact deletion
     private void deleteContact() {
         progressStatus = new ProgressStatus(this);
         progressStatus.setTitle("Deleting");
@@ -121,6 +117,7 @@ public class EditContactActivity extends AppCompatActivity {
         });
     }
 
+    // on contact update
     private void updateContact() {
         progressStatus = new ProgressStatus(this);
         progressStatus.setTitle("Updating");
@@ -154,7 +151,7 @@ public class EditContactActivity extends AppCompatActivity {
         }
     }
 
-
+    // after successful transaction(contact update or delete) reset the fields.
     private void resetUI() {
         binding.userName.setText("");
         binding.userPhoneNumber.setText("");
