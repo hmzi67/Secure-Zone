@@ -1,7 +1,6 @@
 package io.github.hmzi67.securezone.Services;
 
 import android.Manifest;
-import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,7 +12,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.ContentObserver;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -21,26 +19,16 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.provider.MediaStore;
-import android.provider.Settings;
 import android.telephony.SmsManager;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
-import android.view.accessibility.AccessibilityEvent;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -53,7 +41,6 @@ import java.util.ArrayList;
 import io.github.hmzi67.securezone.Activities.MainActivity;
 import io.github.hmzi67.securezone.Modals.FakeCallModel;
 import io.github.hmzi67.securezone.R;
-import io.github.hmzi67.securezone.Widgets.CustomGestureListener;
 
 public class GesturesService extends Service {
     public static final String CHANNEL_ID = "GesturesService";
@@ -86,24 +73,19 @@ public class GesturesService extends Service {
 
             pref = getSharedPreferences("Settings", MODE_PRIVATE);
             if (mAccel > 6) {
-                Toast.makeText(GesturesService.this, "Shakedetected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GesturesService.this, "Shake detected", Toast.LENGTH_SHORT).show();
                 sendSOS();
             }
         }
 
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        }
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
     };
 
+    // SOS sending method
     private void sendSOS() {
-
-
-        Toast.makeText(this, "Count : " + contactNumbers.size(), Toast.LENGTH_SHORT).show();
-
         for (int i = 0; i < contactNumbers.size(); i++) {
             String phoneNumber = contactNumbers.get(i).toString(); // "03143288112";
             String message = "Emergency: SOS! \nNeed immediate assistance. My Location is " + "https://www.google.com/maps?q=" + latitude + "," + longitude +  ". Urgent help required.";
-//            String message = "Emergency: SOS! \nNeed immediate assistance. My Location is " + "https://www.google.com/maps?q=" + ". Urgent help required.";
 
             try {
                 SmsManager smsManager = SmsManager.getDefault();
@@ -120,10 +102,13 @@ public class GesturesService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        // ready the firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         contactNumbers = new ArrayList();
+
+        // getting all contacts
         firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("Contacts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -135,10 +120,10 @@ public class GesturesService extends Service {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
 
+        // setting up location manager
         locationManager = (LocationManager) getApplication().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -148,16 +133,13 @@ public class GesturesService extends Service {
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
 
             @Override
-            public void onProviderEnabled(String provider) {
-            }
+            public void onProviderEnabled(String provider) {}
 
             @Override
-            public void onProviderDisabled(String provider) {
-            }
+            public void onProviderDisabled(String provider) {}
         };
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -165,19 +147,17 @@ public class GesturesService extends Service {
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
-
-
-
+        // register the broadcast receiver
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.media.VOLUME_CHANGED_ACTION");
         registerReceiver(volumeReceiver, filter);
 
+        // register the sensor
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
-
 
         createNotificationChannel();
     }
@@ -212,7 +192,7 @@ public class GesturesService extends Service {
                 .setContentText("Listening!\nClick to Open App")
                 .setSmallIcon(R.drawable.ic_logo)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setOngoing(true)
+                .setOngoing(true)   // if you want to hide the notification by sliding keep it false
                 .setContentIntent(pendingIntent)
                 .addAction(R.drawable.btn_primary, "Video Capturing", videoCapturingIntent)
                 .addAction(R.drawable.btn_meetings, "Close App", stopPendingIntent)
@@ -223,6 +203,7 @@ public class GesturesService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        // if we want to close our service
         if (intent != null && "STOP_SERVICE".equals(intent.getAction())) {
             stopForeground(true);
             stopSelf();
@@ -230,22 +211,6 @@ public class GesturesService extends Service {
         }
 
         createNotification();
-
-//        new Thread(
-//                new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        while (true) {
-//                            Log.e("Service", "Service is running...");
-//                            try {
-//                                Thread.sleep(2000);
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                }
-//        ).start();
 
         return START_STICKY;
     }

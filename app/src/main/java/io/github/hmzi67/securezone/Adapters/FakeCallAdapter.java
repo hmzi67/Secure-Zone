@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -58,7 +57,6 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
             context.startActivity(editContact);
         });
 
-        // call goes here.
         holder.container.setOnClickListener(view -> {
             Intent intent = new Intent(context, InCommingCallActivity.class);
             intent.putExtra("userphoto", fakeCalls.get(position).getCallImage());
@@ -82,7 +80,6 @@ public class FakeCallAdapter extends RecyclerView.Adapter<FakeCallAdapter.ViewHo
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // finding views
             container = itemView.findViewById(R.id.container);
             callImage = itemView.findViewById(R.id.callImage);
             callName = itemView.findViewById(R.id.callName);

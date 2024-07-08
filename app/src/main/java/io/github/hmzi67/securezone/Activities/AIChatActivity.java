@@ -1,20 +1,14 @@
 package io.github.hmzi67.securezone.Activities;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.ai.client.generativeai.BuildConfig;
 import com.google.ai.client.generativeai.GenerativeModel;
-import com.google.ai.client.generativeai.java.ChatFutures;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
 import com.google.ai.client.generativeai.type.Content;
 import com.google.ai.client.generativeai.type.GenerateContentResponse;
@@ -28,15 +22,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import io.github.hmzi67.securezone.Adapters.MessageAdapter;
 import io.github.hmzi67.securezone.Modals.AllMessagesModel;
-import io.github.hmzi67.securezone.R;
 import io.github.hmzi67.securezone.databinding.ActivityAiChatBinding;
 
 public class AIChatActivity extends AppCompatActivity {
@@ -136,6 +126,7 @@ public class AIChatActivity extends AppCompatActivity {
         }, executor);
     }
 
+    // getting all messages from database
     private void getMessages() {
         firebaseDatabase.getReference().child("Users").child(firebaseAuth.getCurrentUser().getUid().toString()).child("Chat").addValueEventListener(new ValueEventListener() {
             @Override
@@ -157,9 +148,7 @@ public class AIChatActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 

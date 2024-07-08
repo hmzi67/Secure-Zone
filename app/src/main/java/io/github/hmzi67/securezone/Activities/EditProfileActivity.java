@@ -8,18 +8,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,8 +23,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import io.github.hmzi67.securezone.Modals.Users;
-import io.github.hmzi67.securezone.R;
-import io.github.hmzi67.securezone.Widgets.ConfirmDialog;
 import io.github.hmzi67.securezone.Widgets.ProgressStatus;
 import io.github.hmzi67.securezone.databinding.ActivityEditProfileBinding;
 
@@ -78,7 +69,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         // setting gender spinner
-        String[] testArray = {"Male", "Female", "Not Preferred"};
+        String[] testArray = {"Female", "Male", "Not Preferred"};
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_dropdown_item, testArray );
         binding.selectGender.setAdapter(spinnerArrayAdapter);
@@ -86,13 +77,12 @@ public class EditProfileActivity extends AppCompatActivity {
         // image update
         binding.changeAvatar.setOnClickListener(view -> selectImage());
 
-
         // update the profile
         binding.updateSettings.setOnClickListener(view -> uploadImage());
     }
 
+    // set image
     private void selectImage() {
-        // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -105,7 +95,6 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            // Get the Uri of data
             filePath = data.getData();
             try {
                 // Setting image on image view using Bitmap
@@ -118,6 +107,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    // upload user image
     private void uploadImage() {
         progressStatus.setTitle("Updating Profile");
         progressStatus.show();
@@ -163,7 +153,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
 
             })).addOnFailureListener(e -> {
-                // Error, Image not uploaded
                 Toast.makeText(EditProfileActivity.this,"Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
         } else {

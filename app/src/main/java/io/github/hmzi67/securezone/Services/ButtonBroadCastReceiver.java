@@ -23,7 +23,7 @@ public class ButtonBroadCastReceiver extends BroadcastReceiver {
             pref = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
         }
 
-
+        // receiving volume changes
         if (intent.getAction() != null && intent.getAction().equals("android.media.VOLUME_CHANGED_ACTION")) {
             int volumeType = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_TYPE", -1);
             int volumeDirection = intent.getIntExtra("android.media.EXTRA_PREV_VOLUME_STREAM_VALUE", -1);
@@ -31,11 +31,8 @@ public class ButtonBroadCastReceiver extends BroadcastReceiver {
 
             if (volumeType == AudioManager.STREAM_MUSIC) {
                 if (newVolume > volumeDirection) {
-                    // Volume up button pressed
-                    openCameraService(context);
-                    Toast.makeText(context, "Volume up", Toast.LENGTH_SHORT).show();
+                    // volume up
                 } else if (newVolume < volumeDirection) {
-                    // Volume down button pressed
                     if (pref.getBoolean("NS", false)) {
                         if (isPlaying) {
                             mediaPlayer.pause();
@@ -44,15 +41,9 @@ public class ButtonBroadCastReceiver extends BroadcastReceiver {
                             mediaPlayer.start();
                             isPlaying = true;
                         }
-                        Toast.makeText(context, "Volume down", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         }
-    }
-
-    private void openCameraService(Context context) {
-        Intent serviceIntent = new Intent(context, CameraService.class);
-        context.startService(serviceIntent);
     }
 }

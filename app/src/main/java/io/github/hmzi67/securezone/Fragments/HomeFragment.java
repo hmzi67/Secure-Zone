@@ -14,19 +14,15 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -51,7 +47,6 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.hmzi67.securezone.Modals.LocationModel;
-import io.github.hmzi67.securezone.Widgets.CustomGestureListener;
 import io.github.hmzi67.securezone.Widgets.MyAlertDialog;
 import io.github.hmzi67.securezone.databinding.FragmentHomeBinding;
 
@@ -96,22 +91,20 @@ public class HomeFragment extends Fragment {
             }
         }
 
+        // set the map
         binding.mapView.setTileSource(TileSourceFactory.MAPNIK);
         binding.mapView.setBuiltInZoomControls(true);
         binding.mapView.setMultiTouchControls(true);
         mapController = binding.mapView.getController();
         mapController.setZoom(15);
 
-        //locationManager = getSystemService(Context.LOCATION_SERVICE);
+        // setting location manager
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-//                double latitude = location.getLatitude();
-//                double longitude = location.getLongitude();
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
-
 
                 GeoPoint startPoint = new GeoPoint(latitude, longitude);
                 mapController.setCenter(startPoint);
@@ -145,7 +138,7 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (binding.mapView != null)
-            binding.mapView.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+            binding.mapView.onResume();
     }
 
     public void onPause() {
@@ -155,6 +148,7 @@ public class HomeFragment extends Fragment {
     }
 
 
+    // show location on map
     private void showMyLocation() {
         binding.mapView.getOverlays().clear();
         Marker startMarker = new Marker(binding.mapView);
@@ -195,47 +189,35 @@ public class HomeFragment extends Fragment {
         // Request a JSON response from the provided URL.
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, apiUrl, null,
-                        new Response.Listener<JSONObject>() {
-
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    // Get the confidence value
-                                    JSONArray resultsArray = response.getJSONArray("results");
-                                    if (resultsArray.length() > 0) {
-                                        JSONObject firstResult = resultsArray.getJSONObject(0);
-                                        int confidence = firstResult.getInt("confidence");
-                                        Log.d("TAG", "Confidence value: " + confidence);
-                                        pref = getActivity().getSharedPreferences("Settings", MODE_PRIVATE);
-                                        if (confidence < 5 && pref.getBoolean("LA", false)) {
-                                            MyAlertDialog.showAlertDialog(getContext(), "Alert", "You are in area where there is less safety. Please get out of here.\n"
-                                                    + "Reliably: " + (confidence * 10) + "%\n"
-                                                    + "Location: " + addressText + "\n"
-                                            );
-                                        }
-                                        Log.d("TAG", "Confidence value: " + confidence);
-                                        // Update UI or perform further operations with confidence value
+                        response -> {
+                            try {
+                                // Get the confidence value
+                                JSONArray resultsArray = response.getJSONArray("results");
+                                if (resultsArray.length() > 0) {
+                                    JSONObject firstResult = resultsArray.getJSONObject(0);
+                                    int confidence = firstResult.getInt("confidence");
+                                    Log.d("TAG", "Confidence value: " + confidence);
+                                    pref = getActivity().getSharedPreferences("Settings", MODE_PRIVATE);
+                                    if (confidence < 5 && pref.getBoolean("LA", false)) {
+                                        MyAlertDialog.showAlertDialog(getContext(), "Alert", "You are in area where there is less safety. Please get out of here.\n"
+                                                + "Reliably: " + (confidence * 10) + "%\n"
+                                                + "Location: " + addressText + "\n"
+                                        );
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    Log.d("TAG", "Confidence value: " + confidence);
                                 }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        }, new Response.ErrorListener() {
+                        }, error -> {
+                            Log.e("TAG", "Error retrieving JSON response: " + error.toString());
+                        });
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle error
-                        Log.e("TAG", "Error retrieving JSON response: " + error.toString());
-                    }
-                });
-
-        // Add the request to the RequestQueue.
         queue.add(jsonObjectRequest);
+    }
 
-}
-
+    // location updates
     private void startLocationUpdates() {
-
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -246,12 +228,12 @@ public class HomeFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
 
-                // Request the permission
+                // Request the location permission
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         1);
 
-                // Request the permission
+                // Request the storage permission
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         1);
@@ -267,6 +249,7 @@ public class HomeFragment extends Fragment {
     }
 
 
+    // on permissions granted
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

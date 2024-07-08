@@ -9,8 +9,6 @@ import android.widget.Toast;
 import java.util.Objects;
 
 public class CameraService extends Activity {
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

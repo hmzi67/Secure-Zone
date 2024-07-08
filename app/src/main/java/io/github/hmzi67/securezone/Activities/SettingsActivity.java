@@ -1,20 +1,10 @@
 package io.github.hmzi67.securezone.Activities;
 
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import io.github.hmzi67.securezone.R;
-import io.github.hmzi67.securezone.Widgets.MyAlertDialog;
-import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 import io.github.hmzi67.securezone.databinding.ActivitySettingsBinding;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -51,6 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
         updateUI();
     }
 
+    // update the settings toggle buttons on User Interface
     private void updateUI() {
         binding.videoCapturing.setChecked(pref.getBoolean("VC", false));
         binding.imageCapturing.setChecked(pref.getBoolean("IC", false));

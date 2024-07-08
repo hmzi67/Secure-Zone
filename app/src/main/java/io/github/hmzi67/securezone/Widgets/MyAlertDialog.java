@@ -6,8 +6,7 @@ import android.content.DialogInterface;
 
 public class MyAlertDialog {
 
-    public MyAlertDialog(Context context) {
-    }
+    public MyAlertDialog(Context context) {}
 
     public static void showAlertDialog(Context context, String title, String message) {
         // Create an AlertDialog.Builder instance
@@ -21,7 +20,6 @@ public class MyAlertDialog {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Handle positive button click
                 dialog.dismiss(); // Dismiss the dialog
             }
         });

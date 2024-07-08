@@ -24,24 +24,12 @@ public class FakeCallModel {
         return callImage;
     }
 
-    public void setCallImage(String callImage) {
-        this.callImage = callImage;
-    }
-
     public String getCallName() {
         return callName;
     }
 
-    public void setCallName(String callName) {
-        this.callName = callName;
-    }
-
     public String getCallNumber() {
         return callNumber;
-    }
-
-    public void setCallNumber(String callNumber) {
-        this.callNumber = callNumber;
     }
 }
 

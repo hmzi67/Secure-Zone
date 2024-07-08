@@ -7,26 +7,21 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.provider.MediaStore;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import io.github.hmzi67.securezone.Activities.SignUpActivity;
 import io.github.hmzi67.securezone.Modals.FakeCallModel;
 import io.github.hmzi67.securezone.R;
-import io.github.hmzi67.securezone.Widgets.CustomGestureListener;
 import io.github.hmzi67.securezone.Widgets.ProgressStatus;
 import io.github.hmzi67.securezone.databinding.FragmentAddContactBinding;
 
@@ -74,7 +69,6 @@ public class AddContactFragment extends Fragment {
 
 
     private void selectImage() {
-        // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -86,7 +80,6 @@ public class AddContactFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            // Get the Uri of data
             filePath = data.getData();
             try {
                 // Setting image on image view using Bitmap
@@ -100,8 +93,11 @@ public class AddContactFragment extends Fragment {
     }
 
     private void saveContact() {
+        // getting user name and phone number
         String userName = binding.userName.getText().toString();
         String userNumber = binding.userPhoneNumber.getText().toString();
+
+        // showing progress dialog
         progressStatus = new ProgressStatus(getContext());
         progressStatus.setTitle("Creating Contact");
 
@@ -138,6 +134,7 @@ public class AddContactFragment extends Fragment {
 
     }
 
+    // reset the page fields
     private void resetPage() {
         binding.userName.setText("");
         binding.userPhoneNumber.setText("");

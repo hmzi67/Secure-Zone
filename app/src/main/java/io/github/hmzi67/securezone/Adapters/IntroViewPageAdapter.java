@@ -28,17 +28,13 @@ public class IntroViewPageAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-
-        //      view pager
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layoutScreen = inflater.inflate(R.layout.layout_screen, null);
 
-        //      initialization and declaration
         ImageView imgSlide = layoutScreen.findViewById(R.id.intro_img);
         TextView title = layoutScreen.findViewById(R.id.intro_title);
         TextView description = layoutScreen.findViewById(R.id.intro_description);
 
-        //      setting values
         title.setText(mListScreen.get(position).getTitle());
         description.setText(mListScreen.get(position).getDescription());
         imgSlide.setImageResource(mListScreen.get(position).getScreenImg());
