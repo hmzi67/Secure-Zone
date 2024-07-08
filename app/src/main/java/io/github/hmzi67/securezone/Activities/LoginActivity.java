@@ -19,15 +19,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 
 import io.github.hmzi67.securezone.Modals.Users;
 import io.github.hmzi67.securezone.R;
 import io.github.hmzi67.securezone.Widgets.ProgressStatus;
 import io.github.hmzi67.securezone.databinding.ActivityLoginBinding;
-import io.github.hmzi67.securezone.databinding.ActivityMainBinding;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
@@ -48,17 +45,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void init() {
+        // ready Firebase
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
         // create account link
         binding.createAccountLink.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
         });
 
-        // ready Firebase
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-
         // reset password
-
         binding.resetPassword.setOnClickListener(view -> {
             String email = binding.userEmail.getText().toString();
             if(email.isEmpty()) {
@@ -99,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // activity result for continue with google.
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
@@ -143,7 +140,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     });
 
+    // method for login user
     private void loginUser() {
+        // getting email and password from user
         String userEmail = binding.userEmail.getText().toString();
         String userPassword = binding.signinUserPassword.getText().toString();
 
@@ -174,8 +173,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isValid(String email) {
-        if (email.matches(emailPattern))
-            return true; //email.matches(emailPattern);
-        return false;
+//        if (email.matches(emailPattern))
+//            return true; //email.matches(emailPattern);
+//        return false;
+        return email.matches(emailPattern);
     }
 }
