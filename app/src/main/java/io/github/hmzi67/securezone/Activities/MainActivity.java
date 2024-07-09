@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private float mAccelCurrent; // current acceleration including gravity
     private float mAccelLast; // last acceleration including gravity
     private GestureDetector gestureDetector;
+    Boolean isPlaying = false;
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
         public void onSensorChanged(SensorEvent se) {
@@ -317,6 +318,22 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = binding.homeToolbar;
         NavigationView navigationView = binding.navView;
         DrawerLayout drawerLayout = binding.drawerLayout;
+
+        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.alarm);
+        binding.noisySound.setOnClickListener(view -> {
+            if (pref.getBoolean("NS", false)) {
+                if (isPlaying) {
+                    mediaPlayer.pause();
+                    mediaPlayer.seekTo(0);
+                    isPlaying = false;
+                } else {
+                    mediaPlayer.start();
+                    isPlaying = true;
+                }
+            } else {
+                Toast.makeText(MainActivity.this, "Noisy sound is off by default", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // setting up toolbar
         firebaseAuth = FirebaseAuth.getInstance();
